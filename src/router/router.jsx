@@ -1,12 +1,14 @@
 // router.jsx
-import { createBrowserRouter } from "react-router";
+import React from "react";
+import { createBrowserRouter } from "react-router-dom";
+import RootLayouts from "../Layout/RootLayouts";
 import Home from "../page/Home/Home";
 import Allloans from "../page/Home/Allloans/Allloans";
 import AboutUs from "../page/Home/Aboutus/AboutUs";
 import Contact from "../page/Home/Contact/Contact";
 import Login from "../components/Login";
 import Register from "../components/Register";
-import RootLayouts from "../Layout/RootLayouts";
+
 
 // Dummy Dashboard Component
 const Dashboard = () => (
@@ -15,10 +17,15 @@ const Dashboard = () => (
   </div>
 );
 
+// Wrap all routes with AuthProvider
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayouts />,
+    element: (
+
+        <RootLayouts />
+
+    ),
     children: [
       { index: true, element: <Home /> },
       { path: "all-loans", element: <Allloans /> },

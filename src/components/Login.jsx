@@ -2,12 +2,14 @@ import React from 'react';
 
 import { useForm } from 'react-hook-form'; 
 
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import useAuth from '../hooks/useAuth';
+import toast from 'react-hot-toast';
 
 const GoogleIcon = () => (
-    <svg 
+    <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 48 48" 
+        viewBox="0 0 48 48"
         className="h-5 w-5 mr-2"
     >
         <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.343c-1.292,3.719-4.582,6.448-8.343,6.448c-5.14,0-9.344-4.204-9.344-9.344s4.204-9.344,9.344-9.344c3.109,0,5.772,1.8,7.054,4.364l4.15-2.651C37.199,10.038,31.474,7,24,7C12.433,7,2.9,16.533,2.9,28S12.433,49,24,49c12.51,0,22.091-10.016,22.091-22C46.091,25.753,45.698,22.92,43.611,20.083z"/>
@@ -36,11 +38,46 @@ const Login = () => {
 
     const { register, handleSubmit } = useForm();
 
+   const { signInUser } = useAuth();
+    const navigate = useNavigate();
 
-    const handleLogin = (data) => {
-        console.log('Login data:', data);
+const handleLogin = (data) => {
+  signInUser(data.email, data.password)
+    .then(result => {
+      console.log(result.user);
+      toast.success("Login Successful!");
+       navigate('/');
+    })
+    .catch(error => {
+      console.log(error.code);
 
-    };
+      // ⭐ Custom Error Handling
+      if (error.code === "auth/user-not-found") {
+        toast.error(" Email does not exist!");
+      }
+      else if (error.code === "auth/wrong-password") {
+        toast.error(" Wrong Password! Try again.");
+      }
+      else if (error.code === "auth/invalid-email") {
+        toast.error(" Invalid email format!");
+      }
+      else {
+        toast.error("Login failed! Try again.");
+      }
+    });
+};
+
+
+    const {  signInGoogle} = useAuth();
+    const handleSingIn = () => {
+  signInGoogle()
+  .then(result =>{
+    console.log(result.user)
+  })
+  .catch(error =>{
+    console.log(error)
+  })
+    }
 
     return (
         <div className="hero bg-base-300 min-h-screen"> 
@@ -102,13 +139,10 @@ const Login = () => {
 
                             <div className="flex flex-col gap-3">
 
-                                <button className="btn btn-outline btn-info" type="button"> 
+                                <button
+                                onClick={handleSingIn} className="btn btn-outline btn-info" type="button">
                                     <GoogleIcon />
                                     Login with Google
-                                </button>
-                                <button className="btn btn-outline btn-neutral" type="button">
-                                    <GitHubIcon />
-                                    Login with GitHub
                                 </button>
                             </div>
 

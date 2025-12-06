@@ -1,24 +1,60 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router-dom'; 
+import useAuth from '../hooks/useAuth';
+import toast from "react-hot-toast";
 
 const Register = () => {
 
-
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const { registerUser, updateUserProfile } = useAuth();
+    const navigate = useNavigate();
 
-    const handleRegistration = (data) => {
-        console.log('after data ', data);
+    const handleRegistration = async (data) => {
+        const { name, email, password } = data;
 
-    }
-    
+        // Password Validation
+        if (!/[A-Z]/.test(password)) {
+            toast.error("Password must contain at least 1 uppercase letter!");
+            return;
+        }
+        if (!/[a-z]/.test(password)) {
+            toast.error("Password must contain at least 1 lowercase letter!");
+            return;
+        }
+        if (password.length < 6) {
+            toast.error("Password must be at least 6 characters long!");
+            return;
+        }
+
+        try {
+
+            const result = await registerUser(email, password);
+            console.log(result.user);
+
+
+            await updateUserProfile({ 
+                displayName: name, 
+
+            });
+
+            toast.success("Registration Successful!");
+
+
+            navigate('/');
+
+        } catch (error) {
+            console.error(error);
+
+            toast.error(error.message);
+        }
+    };
+
     return (
         <div className="hero bg-base-300 min-h-screen">
-
-            <form onSubmit={handleSubmit(handleRegistration)} className="w-full"> 
+            <form onSubmit={handleSubmit(handleRegistration)} className="w-full">
                 <div className="hero-content flex-col lg:flex-row w-full max-w-5xl">
-
 
                     <div className="text-center lg:text-left lg:w-1/2 p-6">
                         <h1 className="text-5xl font-extrabold text-primary mb-4">Join Our Platform!</h1>
@@ -30,100 +66,50 @@ const Register = () => {
 
                     <div className="card bg-base-100 w-full max-w-md shrink-0 shadow-2xl lg:w-1/2">
                         <div className="card-body">
-
                             <h1 className="text-3xl font-bold text-center mb-6">Register Account</h1>
-                            
+
 
                             <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Name</span>
-                                </label>
-                                <input 
-                                    type="text" 
-                                    placeholder="Your Full Name" 
-                                    className="input input-bordered" 
-                                    {...register('name', { required: "Name is required." })} 
-                                />
+                                <label className="label"><span className="label-text">Name</span></label>
+                                <input type="text" placeholder="Your Full Name" className="input input-bordered" {...register('name', { required: "Name is required." })} />
                                 {errors.name && <p className='text-red-500 text-sm mt-1'>{errors.name.message}</p>}
                             </div>
 
-                            {/* Email */}
+
                             <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Email</span>
-                                </label>
-                                <input 
-                                    type="email" 
-                                    placeholder="Enter Your Email" 
-                                    className="input input-bordered" 
-                                    {...register('email', { required: "Email is required." })}
-                                />
+                                <label className="label"><span className="label-text">Email</span></label>
+                                <input type="email" placeholder="Enter Your Email" className="input input-bordered" {...register('email', { required: "Email is required." })} />
                                 {errors.email && <p className='text-red-500 text-sm mt-1'>{errors.email.message}</p>}
                             </div>
 
 
                             <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Photo URL (Optional)</span>
-                                </label>
-
-                                <input 
-                                    type="file" 
-                                    placeholder="Upload your profile picture" 
-                                    className="file-input file-input-bordered w-full"
-                                    {...register('photo', { required: false })} 
-                                />
-
+                                <label className="label"><span className="label-text">Photo URL (Optional)</span></label>
+                                <input type="file" className="file-input file-input-bordered w-full" {...register('photo')} />
                             </div>
-                            
-                            {/* Role Dropdown */}
+
+
                             <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Role</span>
-                                </label>
-                                <select 
-                                    className="select select-bordered w-full" 
-                                    defaultValue="" 
-                                    {...register('role', { required: "Role selection is required." })}
-                                >
+                                <label className="label"><span className="label-text">Role</span></label>
+                                <select className="select select-bordered w-full" defaultValue="" {...register('role', { required: "Role selection is required." })}>
                                     <option value="" disabled>Select your role</option>
                                     <option value="borrower">Borrower</option>
                                     <option value="manager">Manager</option>
                                 </select>
                                 {errors.role && <p className='text-red-500 text-sm mt-1'>{errors.role.message}</p>}
                             </div>
-                            
+
 
                             <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Password</span>
-                                </label>
-                                <input 
-                                    type="password" 
-                                    placeholder="••••••••" 
-                                    className="input input-bordered" 
-                                    {...register('password', {
-                                        required: "Password is required.",
-
-                                        minLength: {
-                                            value: 6,
-                                            message: "Length must be at least 6 characters."
-                                        },
-
-                                        pattern: {
-                                            value: /^(?=.*[A-Z])(?=.*[a-z]).*$/,
-                                            message: "Must have an Uppercase and Lowercase letter."
-                                        }
-                                    })}
-                                />
-
+                                <label className="label"><span className="label-text">Password</span></label>
+                                <input type="password" placeholder="••••••••" className="input input-bordered" {...register('password', { required: "Password is required." })} />
                                 {errors.password && <p className='text-red-500 text-sm mt-1'>{errors.password.message}</p>}
                             </div>
-                            
+
+
                             <div className="form-control mt-6">
                                 <button type="submit" className="btn btn-secondary">Register</button>
                             </div>
-                            
 
                             <div className="text-center mt-6">
                                 <p className="text-sm">
@@ -133,7 +119,6 @@ const Register = () => {
                                     </Link>
                                 </p>
                             </div>
-
                         </div>
                     </div>
                 </div>
