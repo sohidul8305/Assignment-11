@@ -1,15 +1,18 @@
-import React from 'react';
-import Navbar from '../components/Navbar';
-import { Outlet } from 'react-router';
-import Footer from '../components/Footer';
+import { Outlet } from "react-router";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const RootLayouts = () => {
     return (
-        <div>
-        <Navbar></Navbar>
-        <main></main>
-        <Outlet></Outlet>
-        <Footer></Footer>
+        <div className="flex flex-col min-h-screen"> 
+            <Navbar />
+            
+
+          <main className="flex-grow">
+    <Outlet />
+</main>
+
+            <Footer />
         </div>
     );
 };
