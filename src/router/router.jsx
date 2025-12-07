@@ -8,6 +8,7 @@ import AboutUs from "../page/Home/Aboutus/AboutUs";
 import Contact from "../page/Home/Contact/Contact";
 import Login from "../components/Login";
 import Register from "../components/Register";
+import Applyloan from "../components/Applyloan/Applyloan";
 
 
 // Dummy Dashboard Component
@@ -34,6 +35,7 @@ export const router = createBrowserRouter([
       { path: "dashboard", element: <Dashboard /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
+      { path: "loan-application-form", element: <Applyloan /> },
     ],
   },
 ]);
