@@ -10,7 +10,7 @@ const PrivateRoutes = ({children}) => {
     if (loading) {
         return (
             <div>
-                <span className="loading loading-dots loading-xl justify-items-center"></span>
+                  <span className="loading loading-bars loading-lg text-primary"></span>
             </div>
         );
     }

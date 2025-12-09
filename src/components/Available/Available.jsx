@@ -1,28 +1,22 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import Loading from '../../components/Loading';
-import { Link } from 'react-router';
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import Loading from "../../components/Loading";
+import { Link } from "react-router";
 
 const fetchLoans = async () => {
-  const res = await axios.get('http://localhost:4000/loans?limit=6');
+  const res = await axios.get("http://localhost:4000/loans?limit=6");
   return res.data;
 };
 
 const Available = () => {
   const { data: loans = [], isLoading, isError } = useQuery({
-    queryKey: ['loans-home'],
+    queryKey: ["loans-home"],
     queryFn: fetchLoans,
   });
 
   if (isLoading) return <Loading />;
-
-  if (isError)
-    return (
-      <p className="text-center py-10 text-red-600">
-        Error fetching loans!
-      </p>
-    );
+  if (isError) return <div className="text-center py-10 text-red-600">Error fetching loans!</div>;
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -39,7 +33,7 @@ const Available = () => {
             >
               <div className="h-48 overflow-hidden">
                 <img
-                  src={loan.imageURL}
+                  src={loan.image}
                   alt=""
                   className="w-full h-full object-cover transition duration-500 hover:scale-110"
                 />
@@ -51,8 +45,7 @@ const Available = () => {
                 </p>
 
                 <p className="font-extrabold text-lg text-gray-800 border-t pt-3 mt-3 border-gray-100">
-                  Max Loan:{' '}
-                  <span className="text-green-600">{loan.maxLimit}</span>
+                  Max Loan: <span className="text-green-600">{loan.maxLimit}</span>
                 </p>
 
                 <Link to={`/loan-details/${loan._id}`}>

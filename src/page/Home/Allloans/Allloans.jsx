@@ -1,15 +1,15 @@
-// src/page/Home/Allloans/Allloans.jsx
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Link } from "react-router";
 
 const fetchLoans = async () => {
-  const res = await axios.get("http://localhost:4000/loans"); // সব লোন fetch
+  const res = await axios.get("http://localhost:4000/loans"); // সব loans fetch
   return res.data;
 };
 
 const Allloans = () => {
-  const { data: loans, isLoading, isError } = useQuery({
+  const { data: loans = [], isLoading, isError } = useQuery({
     queryKey: ["loans"],
     queryFn: fetchLoans,
   });
@@ -17,8 +17,7 @@ const Allloans = () => {
   if (isLoading) return <div className="text-center mt-10">Loading loans...</div>;
   if (isError) return <div className="text-center mt-10 text-red-500">Error fetching loans!</div>;
 
-  // শুধু প্রথম 12 টা লোন দেখাবে
-  const loansToShow = loans.slice(0, 12);
+  const loansToShow = loans.slice(0, 12); // প্রথম 12 loans
 
   return (
     <div className="container mx-auto p-6">
@@ -45,9 +44,11 @@ const Allloans = () => {
               <p className="text-gray-600 mb-2">
                 <span className="font-semibold">Max Limit:</span> ৳{loan.maxLimit}
               </p>
-              <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors">
-                View Details
-              </button>
+             <Link to={`/loan-details/${loan._id}`} state={{ loan }}>
+  <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors">
+    View Details
+  </button>
+</Link>
             </div>
           </div>
         ))}
