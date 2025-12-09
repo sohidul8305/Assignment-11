@@ -9,6 +9,7 @@ import Contact from "../page/Home/Contact/Contact";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import Applyloan from "../components/Applyloan/Applyloan";
+import Loandetails from "../components/Loandetails/Loandetails";
 
 
 // Dummy Dashboard Component
@@ -36,6 +37,8 @@ export const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
       { path: "loan-application-form", element: <Applyloan /> },
+      { path: "loan-details", element: <Loandetails /> },
+
     ],
   },
 ]);

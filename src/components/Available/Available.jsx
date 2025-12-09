@@ -1,20 +1,20 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import Loading from '../../components/Loading'; // <-- Loading component import
+import Loading from '../../components/Loading';
+import { Link } from 'react-router';
 
 const fetchLoans = async () => {
-  const res = await axios.get('http://localhost:4000/loans');
+  const res = await axios.get('http://localhost:4000/loans?limit=6');
   return res.data;
 };
 
 const Available = () => {
   const { data: loans = [], isLoading, isError } = useQuery({
-    queryKey: ['loans'],
+    queryKey: ['loans-home'],
     queryFn: fetchLoans,
   });
 
-  // ✅ Use Loading Component
   if (isLoading) return <Loading />;
 
   if (isError)
@@ -24,8 +24,6 @@ const Available = () => {
       </p>
     );
 
-  const limitedLoans = loans.slice(0, 6);
-
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-6xl mx-auto px-4">
@@ -34,7 +32,7 @@ const Available = () => {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {limitedLoans.map((loan) => (
+          {loans.map((loan) => (
             <div
               key={loan._id}
               className="bg-white shadow-xl rounded-xl overflow-hidden transform transition duration-500 hover:scale-[1.03] hover:shadow-2xl border-b-4 border-green-600"
@@ -42,16 +40,12 @@ const Available = () => {
               <div className="h-48 overflow-hidden">
                 <img
                   src={loan.imageURL}
-                  alt={loan.title}
+                  alt=""
                   className="w-full h-full object-cover transition duration-500 hover:scale-110"
                 />
               </div>
 
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-green-700 mb-3 leading-snug">
-                  {loan.title}
-                </h3>
-
                 <p className="text-gray-500 mb-3 text-sm line-clamp-2">
                   {loan.shortDesc}
                 </p>
@@ -61,9 +55,11 @@ const Available = () => {
                   <span className="text-green-600">{loan.maxLimit}</span>
                 </p>
 
-                <button className="mt-5 w-full bg-green-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-green-800 transition duration-300 transform hover:-translate-y-0.5">
-                  View Details
-                </button>
+                <Link to={`/loan-details/${loan._id}`}>
+                  <button className="mt-5 w-full bg-green-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-green-800 transition duration-300 transform hover:-translate-y-0.5">
+                    View Details
+                  </button>
+                </Link>
               </div>
             </div>
           ))}
