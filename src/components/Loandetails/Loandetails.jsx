@@ -21,7 +21,8 @@ const Loandetails = ({ user }) => {
       <div className="bg-white rounded-xl shadow-md overflow-hidden border p-6">
         <img src={loan.image} alt={loan.title} className="w-full h-64 object-cover mb-4 rounded-md" />
         <h1 className="text-3xl font-bold mb-4">{loan.title}</h1>
-        <p className="text-gray-700 mb-2">{loan.description}</p>
+        <p className="text-gray-700 mb-2">{loan.
+shortDesc}</p>
         <p className="text-gray-600 mb-1"><span className="font-semibold">Category:</span> {loan.category}</p>
         <p className="text-gray-600 mb-1"><span className="font-semibold">Interest Rate:</span> {loan.interest}%</p>
         <p className="text-gray-600 mb-1"><span className="font-semibold">Max Limit:</span> ৳{loan.maxLimit}</p>

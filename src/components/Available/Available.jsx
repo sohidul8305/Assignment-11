@@ -48,11 +48,9 @@ const Available = () => {
                   Max Loan: <span className="text-green-600">{loan.maxLimit}</span>
                 </p>
 
-                <Link to={`/loan-details/${loan._id}`}>
-                  <button className="mt-5 w-full bg-green-600 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-green-800 transition duration-300 transform hover:-translate-y-0.5">
-                    View Details
-                  </button>
-                </Link>
+               <Link to={`/available-details/${loan._id}`} state={{ loan }}>
+  <button className="btn btn-primary">View Details</button>
+</Link>
               </div>
             </div>
           ))}

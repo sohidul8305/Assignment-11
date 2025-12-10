@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const Register = () => {
 
@@ -12,32 +13,30 @@ const Register = () => {
 
     const handleRegistration = async (data) => {
         const { name, email, password, photo } = data;
+        const profileImg = photo[0];
 
-        // Password Validation
-        if (!/[A-Z]/.test(password)) {
-            toast.error("Password must contain at least 1 uppercase letter!");
-            return;
-        }
-        if (!/[a-z]/.test(password)) {
-            toast.error("Password must contain at least 1 lowercase letter!");
-            return;
-        }
-        if (password.length < 6) {
-            toast.error("Password must be at least 6 characters long!");
-            return;
-        }
+        // Password validation
+        if (!/[A-Z]/.test(password)) return toast.error("Add at least 1 uppercase letter!");
+        if (!/[a-z]/.test(password)) return toast.error("Add at least 1 lowercase letter!");
+        if (password.length < 6) return toast.error("Password must be at least 6 characters!");
 
         try {
-            // Create user in Firebase
+            // Create user
             const result = await registerUser(email, password);
-            console.log(result.user);
 
-            // Update profile (Name + Photo)
+            // Upload image to imgbb
+            const formData = new FormData();
+            formData.append("image", profileImg);
+
+            const url = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`;
+
+            const uploadRes = await axios.post(url, formData);
+            const uploadedPhotoURL = uploadRes.data.data.url;
+
+            // Update Firebase profile
             await updateUserProfile({
                 displayName: name,
-                photoURL: photo
-                    ? photo
-                    : "https://i.ibb.co.com/FHzqKJv/default-profile.png" // default photo
+                photoURL: uploadedPhotoURL
             });
 
             toast.success("Registration Successful!");
@@ -54,92 +53,66 @@ const Register = () => {
             <form onSubmit={handleSubmit(handleRegistration)} className="w-full">
                 <div className="hero-content flex-col lg:flex-row w-full max-w-5xl">
 
-                    {/* Left Content */}
+                    {/* Left */}
                     <div className="text-center lg:text-left lg:w-1/2 p-6">
                         <h1 className="text-5xl font-extrabold text-primary mb-4">Join Our Platform!</h1>
                         <p className="py-6 text-lg">
-                            Create an account to access loans, manage your profile, and connect with managers or borrowers.
+                            Create an account to access loans and manage your profile easily.
                         </p>
                     </div>
 
-                    {/* Form Card */}
+                    {/* Form */}
                     <div className="card bg-base-100 w-full max-w-md shrink-0 shadow-2xl lg:w-1/2">
                         <div className="card-body">
                             <h1 className="text-3xl font-bold text-center mb-6">Register Account</h1>
 
                             {/* Name */}
                             <div className="form-control">
-                                <label className="label"><span className="label-text">Name</span></label>
-                                <input
-                                    type="text"
-                                    placeholder="Your Full Name"
-                                    className="input input-bordered"
-                                    {...register('name', { required: "Name is required." })}
-                                />
-                                {errors.name && <p className='text-red-500 text-sm mt-1'>{errors.name.message}</p>}
+                                <label className="label"><span>Name</span></label>
+                                <input type="text" className="input input-bordered"
+                                    {...register('name', { required: "Name is required" })} />
+                                {errors.name && <p className="text-red-500">{errors.name.message}</p>}
                             </div>
 
                             {/* Email */}
                             <div className="form-control">
-                                <label className="label"><span className="label-text">Email</span></label>
-                                <input
-                                    type="email"
-                                    placeholder="Enter Your Email"
-                                    className="input input-bordered"
-                                    {...register('email', { required: "Email is required." })}
-                                />
-                                {errors.email && <p className='text-red-500 text-sm mt-1'>{errors.email.message}</p>}
+                                <label className="label"><span>Email</span></label>
+                                <input type="email" className="input input-bordered"
+                                    {...register('email', { required: "Email is required" })} />
+                                {errors.email && <p className="text-red-500">{errors.email.message}</p>}
                             </div>
 
-                            {/* Photo URL */}
+                            {/* Photo File */}
                             <div className="form-control">
-                                <label className="label"><span className="label-text">Photo URL</span></label>
-                                <input
-                                    type="text"
-                                    placeholder="Photo URL"
-                                    className="input input-bordered"
-                                    {...register("photo")}
-                                />
+                                <label className="label"><span>Photo</span></label>
+                                <input type="file" className="file-input"
+                                    {...register("photo", { required: true })} />
                             </div>
 
                             {/* Role */}
                             <div className="form-control">
-                                <label className="label"><span className="label-text">Role</span></label>
-                                <select
-                                    className="select select-bordered w-full"
-                                    defaultValue=""
-                                    {...register('role', { required: "Role selection is required." })}
-                                >
-                                    <option value="" disabled>Select your role</option>
+                                <label className="label"><span>Role</span></label>
+                                <select className="select select-bordered"
+                                    {...register("role", { required: "Role is required" })}>
+                                    <option value="">Select Role</option>
                                     <option value="borrower">Borrower</option>
                                     <option value="manager">Manager</option>
                                 </select>
-                                {errors.role && <p className='text-red-500 text-sm mt-1'>{errors.role.message}</p>}
                             </div>
 
                             {/* Password */}
                             <div className="form-control">
-                                <label className="label"><span className="label-text">Password</span></label>
-                                <input
-                                    type="password"
-                                    placeholder="••••••••"
-                                    className="input input-bordered"
-                                    {...register('password', { required: "Password is required." })}
-                                />
-                                {errors.password && <p className='text-red-500 text-sm mt-1'>{errors.password.message}</p>}
+                                <label className="label"><span>Password</span></label>
+                                <input type="password" className="input input-bordered"
+                                    {...register('password', { required: "Password is required" })} />
                             </div>
 
-                            {/* Submit */}
-                            <div className="form-control mt-6">
-                                <button type="submit" className="btn btn-secondary">Register</button>
-                            </div>
+                            <button className="btn btn-secondary mt-6">Register</button>
 
-                            <div className="text-center mt-6">
-                                <p className="text-sm">
-                                    Already have an account?
-                                    <Link to="/login" className="link link-hover link-primary ml-1 font-bold">Login here</Link>
-                                </p>
-                            </div>
+                            <p className="text-center mt-6">
+                                Already have an account?
+                                <Link to="/login" className="link ml-1">Login</Link>
+                            </p>
 
                         </div>
                     </div>

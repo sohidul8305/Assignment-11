@@ -15,7 +15,7 @@ import Allloans from "../page/Home/Allloans/Allloans";
 import Dashboard from "../page/Home/Dashboard/Dashboard";
 import ManageUsers from "../page/Home/Dashboard/User/ManageUsers";
 import Allloan from "../page/Home/Dashboard/AllLoan/Allloan";
-import Loanapplication from "../page/Home/Dashboard/Loan Applications/Loanapplication";
+import Availabledetails from "../components/Availabledetails/Availabledetails";
 
 
 export const router = createBrowserRouter([
@@ -30,7 +30,10 @@ export const router = createBrowserRouter([
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
       { path: "loan-application-form", element: <Applyloan /> },
-      { path: "loan-details/:id", element: <Loandetails /> },
+      { path: "loan-details/:id", element:
+         <PrivateRoutes><Loandetails /></PrivateRoutes>
+     },
+      { path: "available-details/:id", element: <Availabledetails /> },
     ],
   },
    {
@@ -38,16 +41,16 @@ export const router = createBrowserRouter([
     element: <PrivateRoutes><Dashboard></Dashboard></PrivateRoutes>,
     children: [
       {
-       path: 'MangeUsers',
+       path: 'manage-users',
        Component: ManageUsers,
       },
       {
-       path: 'Allloan',
+       path: 'all-loan',
        Component: Allloan,
       },
       {
-       path: 'loanapplication',
-       Component: Loanapplication,
+       path: 'loan-application-form',
+       Component: Applyloan,
       }
     ]
    }

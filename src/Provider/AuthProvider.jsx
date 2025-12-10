@@ -58,7 +58,7 @@ const AuthProvider = ({ children }) => {
     loading,
     registerUser,
     signInUser,
-    signInGoogle, // <-- এখন ঠিক আছে
+    signInGoogle,
     logOut,
     updateUserProfile,
   };
