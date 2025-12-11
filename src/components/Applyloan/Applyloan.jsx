@@ -180,7 +180,7 @@ const LoanApplicationForm = () => {
                 </div>
 
                 <div>
-                    <label className={labelClass}>Extra Notes (Optional):</label>
+                    <label className={labelClass}>Extra Notes:</label>
                     <textarea {...register("extraNotes")} rows="3" placeholder="Any additional information or documents you want to mention." className={inputClass}></textarea>
                 </div>
 

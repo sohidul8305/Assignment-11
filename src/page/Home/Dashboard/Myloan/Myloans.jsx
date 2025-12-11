@@ -1,25 +1,19 @@
-// components/MyLoans.jsx
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import axiosSecure from "../../../../hooks/useAxiosSecure";
+import axios from "axios";
 import useAuth from "../../../../hooks/useAuth";
 
 const MyLoans = () => {
   const { user } = useAuth();
   const userEmail = user?.email;
 
-  const { data: loans = [], isLoading, isError, error } = useQuery({
+  const { data: loans = [], isLoading, isError } = useQuery({
     queryKey: ["my-loans", userEmail],
-    enabled: !!userEmail,
     queryFn: async () => {
-      try {
-        const res = await axiosSecure.get(`/loans?userEmail=${userEmail}`);
-        return res.data;
-      } catch (err) {
-        console.error("Axios Error:", err.response?.data || err.message);
-        throw err;
-      }
+      const res = await axios.get(`http://localhost:4000/loans?userEmail=${userEmail}`);
+      return res.data;
     },
+    enabled: !!userEmail,
   });
 
   if (!userEmail) return <div className="text-center mt-10">No email provided</div>;
@@ -28,14 +22,14 @@ const MyLoans = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">My Loans</h2>
+      <h2 className="text-2xl font-bold mb-4">My Loans for: {userEmail}</h2>
       {loans.length === 0 ? (
         <p>No loan applications found.</p>
       ) : (
         <table className="min-w-full border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
-              <th className="border px-4 py-2">Loan ID</th>
+              <th className="border px-4 py-2">#</th>
               <th className="border px-4 py-2">Loan Title</th>
               <th className="border px-4 py-2">Amount</th>
               <th className="border px-4 py-2">Status</th>
@@ -43,9 +37,9 @@ const MyLoans = () => {
             </tr>
           </thead>
           <tbody>
-            {loans.map((loan) => (
+            {loans.map((loan, index) => (
               <tr key={loan._id}>
-                <td className="border px-4 py-2">{loan._id}</td>
+                <td className="border px-4 py-2">{index + 1}</td> {/* ক্রমানুসারে 1,2,3 */}
                 <td className="border px-4 py-2">{loan.loanTitle}</td>
                 <td className="border px-4 py-2">${loan.loanAmount}</td>
                 <td className="border px-4 py-2">
