@@ -35,7 +35,15 @@ shortDesc}</p>
             </ul>
           </div>
         )}
-<Link to="/loan-application-form">
+<Link
+  to="/loan-application-form" 
+  state={{ 
+    loanInfo: { 
+      title: loan.title, 
+      interest: loan.interest 
+    } 
+  }}
+>
   <button className="w-full py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700">
     Apply Now
   </button>

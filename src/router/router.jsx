@@ -13,9 +13,11 @@ import Loandetails from "../components/Loandetails/Loandetails";
 import PrivateRoutes from "./PrivateRoutes";
 import Allloans from "../page/Home/Allloans/Allloans";
 import Dashboard from "../page/Home/Dashboard/Dashboard";
-import ManageUsers from "../page/Home/Dashboard/User/ManageUsers";
+import ManageUsers from "../page/Home/Dashboard/Myloan/Myloans";
 import Allloan from "../page/Home/Dashboard/AllLoan/Allloan";
 import Availabledetails from "../components/Availabledetails/Availabledetails";
+import Myloans from "../page/Home/Dashboard/Myloan/Myloans";
+import profile from "../page/Home/Dashboard/profile/profile";
 
 
 export const router = createBrowserRouter([
@@ -41,17 +43,13 @@ export const router = createBrowserRouter([
     element: <PrivateRoutes><Dashboard></Dashboard></PrivateRoutes>,
     children: [
       {
-       path: 'manage-users',
-       Component: ManageUsers,
+       path: 'my-loans',
+       Component: Myloans,
       },
       {
-       path: 'all-loan',
-       Component: Allloan,
+       path: 'profile',
+       Component: profile,
       },
-      {
-       path: 'loan-application-form',
-       Component: Applyloan,
-      }
     ]
    }
 ]);
