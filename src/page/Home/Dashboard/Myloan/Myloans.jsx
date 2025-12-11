@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import useAuth from "../../../../hooks/useAuth";
 import Swal from "sweetalert2";
+import Modal from "react-modal";
+
+// Modal accessibility
+Modal.setAppElement("#root");
 
 const MyLoans = () => {
   const { user } = useAuth();
   const userEmail = user?.email;
+
+  const [selectedLoan, setSelectedLoan] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: loans = [], isLoading, isError, refetch } = useQuery({
     queryKey: ["my-loans", userEmail],
@@ -16,6 +23,16 @@ const MyLoans = () => {
     },
     enabled: !!userEmail,
   });
+
+  const handleViewLoan = (loan) => {
+    setSelectedLoan(loan);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedLoan(null);
+    setIsModalOpen(false);
+  };
 
   const handleCancelLoan = (loanId) => {
     Swal.fire({
@@ -79,7 +96,7 @@ const MyLoans = () => {
                   {/* View Button */}
                   <button
                     className="bg-blue-500 text-white px-2 py-1 rounded"
-                    onClick={() => alert(`View loan ${loan._id}`)}
+                    onClick={() => handleViewLoan(loan)}
                   >
                     View
                   </button>
@@ -109,6 +126,36 @@ const MyLoans = () => {
           </tbody>
         </table>
       )}
+
+      {/* Modal for viewing loan details */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={handleCloseModal}
+        contentLabel="Loan Details"
+        className="max-w-lg mx-auto mt-20 bg-white p-6 rounded-xl shadow-lg outline-none"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+      >
+        {selectedLoan && (
+          <div>
+            <h2 className="text-2xl font-bold mb-4">{selectedLoan.loanTitle}</h2>
+            <p><strong>Amount:</strong> ${selectedLoan.loanAmount}</p>
+            <p><strong>Status:</strong> {selectedLoan.status}</p>
+            <p><strong>Fee Status:</strong> {selectedLoan.feeStatus}</p>
+            <p><strong>Interest Rate:</strong> {selectedLoan.interestRate}%</p>
+            <p><strong>Application Date:</strong> {new Date(selectedLoan.applicationDate).toLocaleString()}</p>
+            <p><strong>Reason:</strong> {selectedLoan.reasonForLoan || "N/A"}</p>
+            <p><strong>Address:</strong> {selectedLoan.address || "N/A"}</p>
+            <div className="mt-4 text-right">
+              <button
+                onClick={handleCloseModal}
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
