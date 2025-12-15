@@ -17,6 +17,7 @@ import ManageUsers from "../page/Home/Dashboard/Myloan/Myloans";
 import Availabledetails from "../components/Availabledetails/Availabledetails";
 import Myloans from "../page/Home/Dashboard/Myloan/Myloans";
 import profile from "../page/Home/Dashboard/profile/profile";
+import LoanDetails from "../components/Loandetails/Loandetails";
 
 
 export const router = createBrowserRouter([
@@ -32,7 +33,7 @@ export const router = createBrowserRouter([
       { path: "register", element: <Register /> },
       { path: "loan-application-form", element: <Applyloan /> },
       { path: "loan-details/:id", element:
-         <PrivateRoutes><Loandetails /></PrivateRoutes>
+         <PrivateRoutes><LoanDetails /></PrivateRoutes>
      },
       { path: "available-details/:id", element: <Availabledetails /> },
     ],
