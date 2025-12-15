@@ -4,19 +4,25 @@ import axios from "axios";
 import Loading from "../../components/Loading";
 import { Link } from "react-router";
 
+// API call
 const fetchLoans = async () => {
-  const res = await axios.get("http://localhost:4000/loans?limit=6");
+  const res = await axios.get("http://localhost:4000/loans");
   return res.data;
 };
 
 const Available = () => {
   const { data: loans = [], isLoading, isError } = useQuery({
-    queryKey: ["loans-home"],
+    queryKey: ["available-loans"],
     queryFn: fetchLoans,
   });
 
   if (isLoading) return <Loading />;
-  if (isError) return <div className="text-center py-10 text-red-600">Error fetching loans!</div>;
+  if (isError)
+    return (
+      <div className="text-center py-10 text-red-600">
+        Error fetching loans!
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -26,7 +32,8 @@ const Available = () => {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {loans.map((loan) => (
+          {/* 🔒 ONLY FIRST 6 LOANS */}
+          {loans.slice(0, 6).map((loan) => (
             <div
               key={loan._id}
               className="bg-white shadow-xl rounded-xl overflow-hidden transform transition duration-500 hover:scale-[1.03] hover:shadow-2xl border-b-4 border-green-600"
@@ -34,7 +41,7 @@ const Available = () => {
               <div className="h-48 overflow-hidden">
                 <img
                   src={loan.image}
-                  alt=""
+                  alt={loan.title}
                   className="w-full h-full object-cover transition duration-500 hover:scale-110"
                 />
               </div>
@@ -45,12 +52,15 @@ const Available = () => {
                 </p>
 
                 <p className="font-extrabold text-lg text-gray-800 border-t pt-3 mt-3 border-gray-100">
-                  Max Loan: <span className="text-green-600">{loan.maxLimit}</span>
+                  Max Loan:{" "}
+                  <span className="text-green-600">{loan.maxLimit}</span>
                 </p>
 
-               <Link to={`/available-details/${loan._id}`} state={{ loan }}>
-  <button className="btn btn-primary">View Details</button>
-</Link>
+                <Link to={`/available-details/${loan._id}`} state={{ loan }}>
+                  <button className="btn btn-primary w-full mt-3">
+                    View Details
+                  </button>
+                </Link>
               </div>
             </div>
           ))}

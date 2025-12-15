@@ -101,6 +101,7 @@ const MyLoans = () => {
 
                   {loan.feeStatus === "unpaid" && (
                     <button
+                    unpaid
                       className="bg-green-500 text-white px-2 py-1 rounded"
                       onClick={() => handlePayment(loan)}
                     >
@@ -110,6 +111,7 @@ const MyLoans = () => {
 
                   {loan.feeStatus === "Paid" && (
                     <button
+                    Paid
                       className="bg-gray-300 text-green-600 font-semibold px-2 py-1 rounded"
                       onClick={() => {
                         setSelectedLoan(loan);
