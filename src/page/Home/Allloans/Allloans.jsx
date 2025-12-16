@@ -29,8 +29,14 @@ const AllLoans = () => {
               <p className="text-gray-600 mb-1"><span className="font-semibold">Category:</span> {loan.category}</p>
               <p className="text-gray-600 mb-1"><span className="font-semibold">Interest:</span> {loan.interest}%</p>
               <p className="text-gray-600 mb-2"><span className="font-semibold">Max Limit:</span> ৳{loan.maxLimit}</p>
+              <p className="text-gray-600 mb-2">
+                <span className="font-semibold">Available EMI Plans:</span>{" "}
+                {loan.emiPlans && loan.emiPlans.length > 0 ? loan.emiPlans.join(", ") : "Not available"}
+              </p>
               <Link to={`/loan-details/${loan._id}`} state={{ loans }}>
-                <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">View Details</button>
+                <button className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+                  View Details
+                </button>
               </Link>
             </div>
           </div>

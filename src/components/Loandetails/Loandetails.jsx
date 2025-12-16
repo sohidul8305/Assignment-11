@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 
 const LoanDetails = ({ user }) => {
   const { id } = useParams();
@@ -12,61 +12,82 @@ const LoanDetails = ({ user }) => {
 
   if (!loan) return <div className="text-center mt-10">Loan not found!</div>;
 
-  const handleApply = () => {
-    if (!user) return navigate("/login");
-    if (user.role === "Admin" || user.role === "Manager") {
-      alert("Admins or Managers cannot apply.");
-      return;
-    }
-    navigate(`/apply-loan/${loan._id}`);
+  const navigateToLoanDetails = (loanId) => {
+    navigate(`/loan-details/${loanId}`, { state: { loans: allLoans } });
+    window.scrollTo(0, 0);
   };
+
+  const LoanCardStructure = ({ loanData, isCurrent = false, onClickHandler }) => (
+    <div
+      className={`bg-white rounded-xl shadow-md overflow-hidden border p-6 ${
+        isCurrent ? "mb-6 border-blue-500" : "hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      }`}
+      onClick={onClickHandler}
+    >
+      {loanData.image && (
+        <img
+          src={loanData.image}
+          alt={loanData.title}
+          className="w-full h-48 object-cover mb-4 rounded-md"
+        />
+      )}
+      <h2 className={`text-2xl font-bold mb-2 ${isCurrent ? "text-blue-700" : "text-gray-900"}`}>
+        {loanData.title}
+      </h2>
+      <p className="text-gray-700 mb-2">{loanData.shortDesc}</p>
+      <p className="text-gray-600 mb-1">
+        <span className="font-semibold">Category:</span> {loanData.category}
+      </p>
+      <p className="text-gray-600 mb-1">
+        <span className="font-semibold">Interest:</span> {loanData.interest}%
+      </p>
+      <p className="text-gray-600 mb-1">
+        <span className="font-semibold">Max Limit:</span> ৳{loanData.maxLimit}
+      </p>
+
+      {/* EMI Plans */}
+      <div className="text-gray-600 mb-4">
+        <span className="font-semibold">Available EMI Plans:</span>
+        {loanData.emiPlans?.length > 0 ? (
+          <ul className="list-disc list-inside text-gray-700 mt-1">
+            {loanData.emiPlans.map((plan, index) => (
+              <li key={index}>{plan}</li>
+            ))}
+          </ul>
+        ) : (
+          <span className="ml-2">Not available</span>
+        )}
+      </div>
+
+      {/* Features */}
+      {loanData.features?.length > 0 && (
+        <div className="mb-4">
+          <h3 className="text-xl font-semibold mb-2">Features:</h3>
+          <ul className="list-disc list-inside text-gray-700">
+            {loanData.features.map((f, i) => (
+              <li key={i}>{f}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Apply Now button */}
+      <Link to="/loan-application-form">
+        <button
+          className="w-full h-12 mt-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors"
+        >
+          Apply Now
+        </button>
+      </Link>
+    </div>
+  );
 
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-center">Loan Details</h1>
 
       {/* Current Loan */}
-      <div className="bg-white rounded-xl shadow-md overflow-hidden border p-6 mb-6">
-        {loan.image && (
-          <img
-            src={loan.image}
-            alt={loan.title}
-            className="w-full h-64 object-cover mb-4 rounded-md"
-          />
-        )}
-        <h2 className="text-2xl font-bold mb-2">{loan.title}</h2>
-        <p className="text-gray-700 mb-2">{loan.shortDesc}</p>
-        <p className="text-gray-600 mb-1">
-          <span className="font-semibold">Category:</span> {loan.category}
-        </p>
-        <p className="text-gray-600 mb-1">
-          <span className="font-semibold">Interest:</span> {loan.interest}%
-        </p>
-        <p className="text-gray-600 mb-1">
-          <span className="font-semibold">Max Limit:</span> ৳{loan.maxLimit}
-        </p>
-        <p className="text-gray-600 mb-4">
-          <span className="font-semibold">Available EMI Plans:</span> {loan.emiPlans?.join(", ")}
-        </p>
-        {loan.features?.length > 0 && (
-          <div className="mb-4">
-            <h3 className="text-xl font-semibold mb-2">Features:</h3>
-            <ul className="list-disc list-inside text-gray-700">
-              {loan.features.map((f, i) => (
-                <li key={i}>{f}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Apply Now Button */}
-        <button
-          onClick={handleApply}
-          className="w-full h-12 mt-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Apply Now
-        </button>
-      </div>
+      <LoanCardStructure loanData={loan} isCurrent={true} />
     </div>
   );
 };

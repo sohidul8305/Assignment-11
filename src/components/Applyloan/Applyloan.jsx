@@ -1,12 +1,13 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; // useNavigate যোগ করা হয়েছে
 import axiosSecure from '../../hooks/useAxiosSecure';
 import useAuth from '../../hooks/useAuth';
 
 const LoanApplicationForm = () => {
     const location = useLocation();
+    const navigate = useNavigate(); // useNavigate hook ব্যবহার
     const { loanInfo, user: stateUser } = location.state || {};
     const { user: authUser } = useAuth();
 
@@ -37,16 +38,21 @@ const LoanApplicationForm = () => {
             if (result.isConfirmed) {
                 axiosSecure.post('/loan-applications', applicationData)
                     .then(res => {
+                        // Success block
                         Swal.fire('Success!', 'Your loan application is submitted.', 'success');
                         reset();
+                        // সফল হলে MyLoans পেজে রিডাইরেক্ট করা
+                        navigate('/dashboard/my-loans'); 
                     })
                     .catch(err => {
-                        Swal.fire('Error!', 'Could not submit your application.', 'error');
+                        console.error("Loan submission error:", err.response ? err.response.data : err.message);
+                        Swal.fire('Error!', 'Could not submit your application. Please check console for details.', 'error');
                     });
             }
         });
     };
-
+    
+    // ... (বাকি কোড অপরিবর্তিত) ...
     const inputClass = "mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 text-gray-700";
     const readOnlyClass = "mt-1 block w-full px-4 py-3 border border-gray-200 bg-gray-50 rounded-lg text-gray-600 font-medium";
     const labelClass = "block text-base font-semibold text-gray-800 mb-1";
