@@ -18,6 +18,7 @@ import Availabledetails from "../components/Availabledetails/Availabledetails";
 import Myloans from "../page/Home/Dashboard/Myloan/Myloans";
 import profile from "../page/Home/Dashboard/profile/profile";
 import LoanDetails from "../components/Loandetails/Loandetails";
+import PaymentSuccess from "../page/Home/Dashboard/Paymentsuccess/PaymentSuccess";
 
 
 export const router = createBrowserRouter([
@@ -49,6 +50,10 @@ export const router = createBrowserRouter([
       {
        path: 'profile',
        Component: profile,
+      },
+      {
+       path: 'payment-success',
+       Component: PaymentSuccess,
       },
     ]
    }
