@@ -19,6 +19,7 @@ import Myloans from "../page/Home/Dashboard/Myloan/Myloans";
 import profile from "../page/Home/Dashboard/profile/profile";
 import LoanDetails from "../components/Loandetails/Loandetails";
 import PaymentSuccess from "../page/Home/Dashboard/Paymentsuccess/PaymentSuccess";
+import PaymentCancelled from "../page/Home/Dashboard/PaymentCancellrd/PaymentCancelled";
 
 
 export const router = createBrowserRouter([
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
       {
        path: 'payment-success',
        Component: PaymentSuccess,
+      },
+      {
+       path: 'dashboard/payment-cancelled',
+       Component: PaymentCancelled,
       },
     ]
    }

@@ -1,22 +1,49 @@
-import { useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
-import useAuth from "../../../../hooks/useAuth";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import axiosSecure from "../../../../hooks/useAxiosSecure";
 
 const PaymentSuccess = () => {
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const sessionId = params.get("session_id");
+
+  const [payment, setPayment] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (user?.email) queryClient.invalidateQueries(["my-loans", user.email]);
-    Swal.fire("Payment Successful!", "Your fee has been paid.", "success").then(() => {
-      navigate("/myloans");
-    });
-  }, [user, queryClient, navigate]);
+    if (!sessionId) {
+      setError("Invalid session");
+      setLoading(false);
+      return;
+    }
 
-  return <p className="text-center mt-10">Processing payment...</p>;
+    const loadPayment = async () => {
+      try {
+        const res = await axiosSecure.get(`/payment-details?session_id=${sessionId}`);
+        setPayment(res.data);
+      } catch {
+        setError("Payment info not found");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPayment();
+  }, [sessionId]);
+
+  if (loading) return <p>⏳ Verifying payment...</p>;
+  if (error) return <p className="text-red-600">{error}</p>;
+
+  return (
+    <div className="p-6 bg-white shadow rounded">
+      <h2 className="text-2xl font-bold text-green-600">Payment Successful 🎉</h2>
+      <p><b>Transaction ID:</b> {payment.transactionId}</p>
+      <p><b>Email:</b> {payment.customerEmail}</p>
+      <p><b>Loan:</b> {payment.loanTitle}</p>
+      <p><b>Loan ID:</b> {payment.loanId}</p>
+      <p className="text-xl font-bold mt-2">Amount Paid: {payment.amount} BDT</p>
+    </div>
+  );
 };
 
 export default PaymentSuccess;

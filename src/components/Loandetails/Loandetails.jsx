@@ -72,13 +72,18 @@ const LoanDetails = ({ user }) => {
       )}
 
       {/* Apply Now button */}
-      <Link to="/loan-application-form">
-        <button
-          className="w-full h-12 mt-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Apply Now
-        </button>
-      </Link>
+<Link
+  to="/loan-application-form"
+  state={{
+    email: user?.email,          // optional (email auth থেকেও আসে)
+    title: loan.title,
+    interest: loan.interest,
+  }}
+>
+  <button className="w-full h-12 mt-4 bg-blue-600 text-white font-semibold hover:bg-blue-700">
+    Apply Now
+  </button>
+</Link>
     </div>
   );
 

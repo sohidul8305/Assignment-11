@@ -1,23 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
-import { useLocation, useNavigate } from "react-router-dom"; // useNavigate যোগ করা হয়েছে
+import { useLocation, useNavigate } from "react-router-dom";
 import axiosSecure from '../../hooks/useAxiosSecure';
 import useAuth from '../../hooks/useAuth';
 
 const LoanApplicationForm = () => {
     const location = useLocation();
-    const navigate = useNavigate(); // useNavigate hook ব্যবহার
-    const { loanInfo, user: stateUser } = location.state || {};
+    const navigate = useNavigate();
     const { user: authUser } = useAuth();
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm({
-        defaultValues: {
-            userEmail: stateUser?.email || authUser?.email || "",
-            loanTitle: loanInfo?.title || "",
-            interestRate: loanInfo?.interest || "",
+    const { loanInfo, user: stateUser } = location.state || {};
+
+    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
+
+    // Auto-fill Email, Title, Interest from location.state or authUser
+    useEffect(() => {
+        if (stateUser?.email || authUser?.email) {
+            setValue("userEmail", stateUser?.email || authUser?.email);
         }
-    });
+        if (loanInfo?.title) {
+            setValue("loanTitle", loanInfo.title);
+        }
+        if (loanInfo?.interest || loanInfo?.interestRate) {
+            setValue("interestRate", loanInfo.interest || loanInfo.interestRate);
+        }
+    }, [stateUser, authUser, loanInfo, setValue]);
 
     const onSubmit = (data) => {
         const applicationData = {
@@ -38,11 +46,9 @@ const LoanApplicationForm = () => {
             if (result.isConfirmed) {
                 axiosSecure.post('/loan-applications', applicationData)
                     .then(res => {
-                        // Success block
                         Swal.fire('Success!', 'Your loan application is submitted.', 'success');
                         reset();
-                        // সফল হলে MyLoans পেজে রিডাইরেক্ট করা
-                        navigate('/dashboard/my-loans'); 
+                        navigate('/dashboard/my-loans');
                     })
                     .catch(err => {
                         console.error("Loan submission error:", err.response ? err.response.data : err.message);
@@ -51,8 +57,8 @@ const LoanApplicationForm = () => {
             }
         });
     };
-    
-    // ... (বাকি কোড অপরিবর্তিত) ...
+
+    // Tailwind CSS classes
     const inputClass = "mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 text-gray-700";
     const readOnlyClass = "mt-1 block w-full px-4 py-3 border border-gray-200 bg-gray-50 rounded-lg text-gray-600 font-medium";
     const labelClass = "block text-base font-semibold text-gray-800 mb-1";
@@ -70,38 +76,17 @@ const LoanApplicationForm = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div>
                         <label className={labelClass}>User Email:</label>
-                        <input
-                            type="email"
-                            {...register("userEmail")}
-                            defaultValue={stateUser?.email || authUser?.email || ""}
-                            className={readOnlyClass}
-                            readOnly={!!(stateUser?.email || authUser?.email)}
-                            placeholder="Enter your email"
-                        />
+                        <input type="email" {...register("userEmail")} readOnly className={readOnlyClass} />
                     </div>
 
                     <div>
                         <label className={labelClass}>Loan Title:</label>
-                        <input
-                            type="text"
-                            {...register("loanTitle")}
-                            defaultValue={loanInfo?.title || ""}
-                            className={readOnlyClass}
-                            readOnly={!!loanInfo?.title}
-                            placeholder="Enter loan title"
-                        />
+                        <input type="text" {...register("loanTitle")} readOnly className={readOnlyClass} />
                     </div>
 
                     <div>
                         <label className={labelClass}>Interest Rate:</label>
-                        <input
-                            type="text"
-                            {...register("interestRate")}
-                            defaultValue={loanInfo?.interest || ""}
-                            className={readOnlyClass}
-                            readOnly={!!loanInfo?.interest}
-                            placeholder="Enter interest rate"
-                        />
+                        <input type="text" {...register("interestRate")} readOnly className={readOnlyClass} />
                     </div>
                 </div>
 
