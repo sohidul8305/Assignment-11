@@ -20,6 +20,7 @@ import profile from "../page/Home/Dashboard/profile/profile";
 import LoanDetails from "../components/Loandetails/Loandetails";
 import PaymentSuccess from "../page/Home/Dashboard/Paymentsuccess/PaymentSuccess";
 import PaymentCancelled from "../page/Home/Dashboard/PaymentCancellrd/PaymentCancelled";
+import Profile from "../page/Home/Dashboard/profile/profile";
 
 
 export const router = createBrowserRouter([
@@ -40,26 +41,15 @@ export const router = createBrowserRouter([
       { path: "available-details/:id", element: <Availabledetails /> },
     ],
   },
-   {
-    path: "dashboard",
-    element: <PrivateRoutes><Dashboard></Dashboard></PrivateRoutes>,
-    children: [
-      {
-       path: 'my-loans',
-       Component: Myloans,
-      },
-      {
-       path: 'profile',
-       Component: profile,
-      },
-      {
-       path: 'payment-success',
-       Component: PaymentSuccess,
-      },
-      {
-       path: 'dashboard/payment-cancelled',
-       Component: PaymentCancelled,
-      },
-    ]
-   }
+{
+  path: "dashboard",
+  element: <PrivateRoutes><Dashboard /></PrivateRoutes>,
+  children: [
+    { path: "my-loans", element: <Myloans /> },
+    { path: "profile", element: <Profile /> },
+    { path: "payment-success", element: <PaymentSuccess /> },
+    { path: "payment-cancelled", element: <PaymentCancelled /> },
+  ],
+}
+
 ]);

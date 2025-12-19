@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import useAuth from "../../../../hooks/useAuth";
 import axiosSecure from "../../../../hooks/useAxiosSecure";
+import { Link } from "react-router";
 
 const MyLoans = () => {
   const { user } = useAuth();
@@ -144,12 +145,12 @@ const MyLoans = () => {
                     </button>
 
                     {loan.feeStatus === "unpaid" && (
-                      <button
-                        onClick={() => handlePayFee(loan)}
-                        className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs"
-                      >
-                        Pay
-                      </button>
+                   <button
+    onClick={() => handlePayFee(loan)}
+    className="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs"
+  >
+    Pay
+  </button>
                     )}
 
                     {loan.status === "Pending" && (

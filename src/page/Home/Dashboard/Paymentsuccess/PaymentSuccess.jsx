@@ -1,47 +1,47 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import axiosSecure from "../../../../hooks/useAxiosSecure";
+import React, { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import axios from "axios";
 
 const PaymentSuccess = () => {
-  const [params] = useSearchParams();
-  const sessionId = params.get("session_id");
-
-  const [payment, setPayment] = useState(null);
+  const [paymentInfo, setPaymentInfo] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [searchParams] = useSearchParams();
+  const loanId = searchParams.get("loanId");
 
   useEffect(() => {
-    if (!sessionId) {
-      setError("Invalid session");
-      setLoading(false);
-      return;
+    if (loanId) {
+      axios
+        .get(`http://localhost:4000/payment-info/${loanId}`)
+        .then((res) => {
+          setPaymentInfo(res.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setLoading(false);
+        });
     }
+  }, [loanId]);
 
-    const loadPayment = async () => {
-      try {
-        const res = await axiosSecure.get(`/payment-details?session_id=${sessionId}`);
-        setPayment(res.data);
-      } catch {
-        setError("Payment info not found");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadPayment();
-  }, [sessionId]);
-
-  if (loading) return <p>⏳ Verifying payment...</p>;
-  if (error) return <p className="text-red-600">{error}</p>;
+  if (loading) return <p>Loading payment info...</p>;
+  if (!paymentInfo) return <p>No payment info found.</p>;
 
   return (
-    <div className="p-6 bg-white shadow rounded">
-      <h2 className="text-2xl font-bold text-green-600">Payment Successful 🎉</h2>
-      <p><b>Transaction ID:</b> {payment.transactionId}</p>
-      <p><b>Email:</b> {payment.customerEmail}</p>
-      <p><b>Loan:</b> {payment.loanTitle}</p>
-      <p><b>Loan ID:</b> {payment.loanId}</p>
-      <p className="text-xl font-bold mt-2">Amount Paid: {payment.amount} BDT</p>
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
+      <h1>Payment Successful ✅</h1>
+      <p>Thank you for your payment. Your loan fee has been updated.</p>
+
+      <div style={{ marginTop: "30px", textAlign: "left", display: "inline-block" }}>
+        <p><strong>Transaction ID:</strong> {paymentInfo.transactionId}</p>
+        <p><strong>Email:</strong> {paymentInfo.email}</p>
+        <p><strong>Loan Title:</strong> {paymentInfo.loanTitle}</p>
+        <p><strong>Amount:</strong> ${paymentInfo.amount}</p>
+        <p><strong>Date:</strong> {new Date(paymentInfo.date).toLocaleString()}</p>
+      </div>
+
+      <div style={{ marginTop: "20px" }}>
+        <Link to="/">Go to Dashboard</Link>
+      </div>
     </div>
   );
 };

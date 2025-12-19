@@ -1,3 +1,4 @@
+// LoanApplicationForm.jsx
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
@@ -10,22 +11,23 @@ const LoanApplicationForm = () => {
     const navigate = useNavigate();
     const { user: authUser } = useAuth();
 
-    const { loanInfo, user: stateUser } = location.state || {};
+    // location.state থেকে data আসবে
+    const { email, title, interest } = location.state || {};
 
     const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
 
-    // Auto-fill Email, Title, Interest from location.state or authUser
+    // Auto-fill email, title, interest
     useEffect(() => {
-        if (stateUser?.email || authUser?.email) {
-            setValue("userEmail", stateUser?.email || authUser?.email);
+        if (email || authUser?.email) {
+            setValue("userEmail", email || authUser?.email);
         }
-        if (loanInfo?.title) {
-            setValue("loanTitle", loanInfo.title);
+        if (title) {
+            setValue("loanTitle", title);
         }
-        if (loanInfo?.interest || loanInfo?.interestRate) {
-            setValue("interestRate", loanInfo.interest || loanInfo.interestRate);
+        if (interest) {
+            setValue("interestRate", interest);
         }
-    }, [stateUser, authUser, loanInfo, setValue]);
+    }, [email, title, interest, authUser, setValue]);
 
     const onSubmit = (data) => {
         const applicationData = {
