@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 // Image import (Vite supports direct import)
-import heroImage from "../../assets/banner/loan2.jpg";
+import heroImage from "../../assets/loan2.jpg";
 
 const HeroBanner = () => {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const HeroBanner = () => {
           </button>
 
           <button
-            onClick={() => navigate("/available-loans")}
+            onClick={() => navigate("/all-loans")}
             className="bg-transparent hover:bg-white/20 border border-white text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition duration-300 transform hover:scale-105"
           >
             EXPLORE LOANS
