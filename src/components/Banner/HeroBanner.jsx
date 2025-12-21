@@ -8,12 +8,13 @@ const HeroBanner = () => {
   const navigate = useNavigate();
 
   return (
+
     <section className="relative w-full h-[80vh] md:h-[90vh] lg:h-screen">
       {/* Hero Image */}
       <img
         src={heroImage}
         alt="Loan Hero"
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover "
       />
 
       {/* Overlay */}

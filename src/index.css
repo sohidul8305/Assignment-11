@@ -11,3 +11,6 @@ body {
   font-weight: 700;
   font-style: normal;
 }
+.absolute.inset-0.bg-black.bg-opacity-50.flex.flex-col.justify-center.items-center.text-center.p-4.space-y-6 {
+    background: content-box;
+}

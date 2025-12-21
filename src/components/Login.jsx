@@ -82,7 +82,7 @@ const handleLogin = (data) => {
     return (
         <div className="hero bg-base-300 min-h-screen"> 
 
-            <form onSubmit={handleSubmit(handleLogin)} className="w-full"> 
+            <form onSubmit={handleSubmit(handleLogin)} className="w-full">
                 <div className="hero-content flex-col lg:flex-row-reverse w-full max-w-5xl">
 
 

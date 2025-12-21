@@ -1,29 +1,37 @@
-// router.jsx
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 
+// Layouts
 import RootLayouts from "../Layout/RootLayouts";
+import Dashboard from "../page/Home/Dashboard/Dashboard";
+
+// Public Pages
 import Home from "../page/Home/Home";
 import AboutUs from "../page/Home/Aboutus/AboutUs";
 import Contact from "../page/Home/Contact/Contact";
 import Login from "../components/Login";
 import Register from "../components/Register";
-import Applyloan from "../components/Applyloan/Applyloan";
-import Loandetails from "../components/Loandetails/Loandetails";
-import PrivateRoutes from "./PrivateRoutes";
 import Allloans from "../page/Home/Allloans/Allloans";
-import Dashboard from "../page/Home/Dashboard/Dashboard";
-import ManageUsers from "../page/Home/Dashboard/Myloan/Myloans";
 import Availabledetails from "../components/Availabledetails/Availabledetails";
-import Myloans from "../page/Home/Dashboard/Myloan/Myloans";
-import profile from "../page/Home/Dashboard/profile/profile";
 import LoanDetails from "../components/Loandetails/Loandetails";
-import PaymentSuccess from "../page/Home/Dashboard/Paymentsuccess/PaymentSuccess";
-import PaymentCancelled from "../page/Home/Dashboard/PaymentCancellrd/PaymentCancelled";
+
+// Dashboard Pages
+import MyLoans from "../page/Home/Dashboard/Myloan/Myloans";
 import Profile from "../page/Home/Dashboard/profile/profile";
 
+// Manager Pages
+import AddLoan from "../page/Home/Dashboard/Manager/AddLoan/AddLoan";
+import ManageLoans from "../page/Home/Dashboard/ManageLoans/ManageLoans";
+import PendingLoans from "../page/Home/Dashboard/Manager/PendingLoans/PendingLoans";
+import ApprovedLoans from "../page/Home/Dashboard/ApprovedLoans/ApprovedLoans";
+
+// Route Guards
+import PrivateRoutes from "./PrivateRoutes";
+import BorrowerRoute from "./BorrowerRoute";
+import ManagerRoute from "./ManagerRoute";
 
 export const router = createBrowserRouter([
+  // ================= PUBLIC ROUTES =================
   {
     path: "/",
     element: <RootLayouts />,
@@ -34,22 +42,89 @@ export const router = createBrowserRouter([
       { path: "contact", element: <Contact /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
-      { path: "loan-application-form", element: <Applyloan /> },
-      { path: "loan-details/:id", element:
-         <PrivateRoutes><LoanDetails /></PrivateRoutes>
-     },
-      { path: "available-details/:id", element: <Availabledetails /> },
+
+      {
+        path: "loan-details/:id",
+        element: (
+          <PrivateRoutes>
+            <LoanDetails />
+          </PrivateRoutes>
+        ),
+      },
+
+      {
+        path: "available-details/:id",
+        element: <Availabledetails />,
+      },
     ],
   },
-{
-  path: "dashboard",
-  element: <PrivateRoutes><Dashboard /></PrivateRoutes>,
-  children: [
-    { path: "my-loans", element: <Myloans /> },
-    { path: "profile", element: <Profile /> },
-    { path: "payment-success", element: <PaymentSuccess /> },
-    { path: "payment-cancelled", element: <PaymentCancelled /> },
-  ],
-}
 
+  // ================= DASHBOARD (ONLY ONE) =================
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoutes>
+        <Dashboard />
+      </PrivateRoutes>
+    ),
+    children: [
+      // ===== Borrower =====
+      {
+        index: true,
+        element: (
+          <BorrowerRoute>
+            <MyLoans />
+          </BorrowerRoute>
+        ),
+      },
+      {
+        path: "my-loans",
+        element: (
+          <BorrowerRoute>
+            <MyLoans />
+          </BorrowerRoute>
+        ),
+      },
+
+      // ===== Manager =====
+      {
+        path: "add-loan",
+        element: (
+          <ManagerRoute>
+            <AddLoan />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "manage-loans",
+        element: (
+          <ManagerRoute>
+            <ManageLoans />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "pending-loans",
+        element: (
+          <ManagerRoute>
+            <PendingLoans />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "approved-loans",
+        element: (
+          <ManagerRoute>
+            <ApprovedLoans />
+          </ManagerRoute>
+        ),
+      },
+
+      // ===== Common =====
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+    ],
+  },
 ]);

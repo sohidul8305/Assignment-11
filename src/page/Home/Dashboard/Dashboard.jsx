@@ -1,111 +1,149 @@
-import React from 'react';
-import { FaUserAlt, FaHome, FaMoneyBillWave, FaCreditCard, FaCog, FaUserTie } from 'react-icons/fa';
-import { NavLink, Outlet, Link } from 'react-router-dom';
-
-// ডিফল্টভাবে Borrower দেখানোর জন্য
-const currentUserRole = 'Borrower';
+import React, { useEffect } from "react";
+import {
+  FaUserAlt,
+  FaHome,
+  FaCreditCard,
+  FaCog,
+  FaUserTie,
+  FaPlusCircle,
+  FaTasks,
+  FaCheckCircle,
+} from "react-icons/fa";
+import { NavLink, Outlet, Link, useNavigate, useLocation } from "react-router-dom";
+import useAuth from "../../../hooks/useAuth";
 
 const Dashboard = () => {
+  const { user, logout, loading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-    // Borrower Links (My Loans, Apply for Loan, My Profile)
-    const dashboardLinks = (
-        <>
+  // ================= ROLE FIX =================
+  const role =
+    user?.email === "manager@loanmate.com" ? "manager" : "borrower";
 
+  // ================= AUTO REDIRECT (NO LOOP) =================
+  useEffect(() => {
+    if (loading || !user) return;
 
-                    {/* Common Links */}
-                    <li>
-                        <Link to="/" className="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
-                            <FaHome className="w-5 h-5 mr-3" />
-                            <span className="font-medium">Go to Homepage</span>
-                        </Link>
-                    </li>
-            <li>
-                <NavLink to="/dashboard/my-loans" className={({ isActive }) => isActive 
-                    ? 'bg-primary text-white flex items-center p-3 rounded-lg' 
-                    : 'hover:bg-gray-100 text-gray-700 flex items-center p-3 rounded-lg'}>
-                    <FaCreditCard className="w-5 h-5 mr-3" />
-                    <span className="font-medium">My Loans</span>
-                </NavLink>
-            </li>
-            <li>
+    if (location.pathname === "/dashboard") {
+      if (role === "manager") {
+        navigate("/dashboard/add-loan", { replace: true });
+      } else {
+        navigate("/dashboard/my-loans", { replace: true });
+      }
+    }
+  }, [role, loading, user, navigate, location.pathname]);
 
-            </li>
-            <li>
-                <NavLink to="/dashboard/profile" className={({ isActive }) => isActive
-                    ? 'bg-primary text-white flex items-center p-3 rounded-lg'
-                    : 'hover:bg-gray-100 text-gray-700 flex items-center p-3 rounded-lg'}>
-                    <FaUserAlt className="w-5 h-5 mr-3" />
-                    <span className="font-medium">My Profile</span>
-                </NavLink>
-            </li>
-        </>
-    );
+  if (loading) {
+    return <div className="p-10 text-center">Loading Dashboard...</div>;
+  }
 
-    return (
-        <div className="drawer lg:drawer-open">
-            <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+  // ================= Borrower Links =================
+  const borrowerLinks = (
+    <>
+      <li>
+        <NavLink to="/dashboard/my-loans">
+          <FaCreditCard /> My Loans
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/dashboard/profile">
+          <FaUserAlt /> My Profile
+        </NavLink>
+      </li>
+    </>
+  );
 
-            {/* Main Content */}
-            <div className="drawer-content flex flex-col min-h-screen bg-gray-50">
-                {/* Top Navbar */}
-                <nav className="navbar w-full bg-white shadow-md sticky top-0 z-10">
-                    <div className="flex-none lg:hidden">
-                        <label htmlFor="my-drawer-4" className="btn btn-square btn-ghost">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-6 h-6 stroke-current">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg>
-                        </label>
-                    </div>
-                    <div className="flex-1 px-4 text-2xl font-semibold text-gray-800">
-                        Loan Mate <span className="text-primary">Dashboard</span>
-                    </div>
-                    <div className="flex-none flex items-center space-x-4">
-                        <FaUserTie className="w-5 h-5 text-gray-600" />
-                        <span className="text-sm font-medium text-gray-600">{currentUserRole}</span>
-                        <button className="btn btn-ghost btn-circle">
-                            <FaUserAlt className="w-5 h-5" />
-                        </button>
-                    </div>
-                </nav>
+  // ================= Manager Links =================
+  const managerLinks = (
+    <>
+      <li>
+        <NavLink to="/dashboard/add-loan">
+          <FaPlusCircle /> Add Loan
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/dashboard/manage-loans">
+          <FaTasks /> Manage Loans
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/dashboard/pending-loans">
+          <FaTasks /> Pending Applications
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/dashboard/approved-loans">
+          <FaCheckCircle /> Approved Applications
+        </NavLink>
+      </li>
+      <li>
+        <NavLink to="/dashboard/profile">
+          <FaUserAlt /> My Profile
+        </NavLink>
+      </li>
+    </>
+  );
 
-                {/* Page Content */}
-                <div className="p-6 flex-grow">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-6">Welcome back, {currentUserRole}! 👋</h1>
-                    <p className="text-lg text-gray-600 mb-8">Manage your loans efficiently.</p>
+  return (
+    <div className="drawer lg:drawer-open">
+      <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
 
-                    {/* Routed Content */}
-                    <div className="bg-white p-6 rounded-xl shadow-lg min-h-[70vh]">
-                        <Outlet />
-                    </div>
-                </div>
-            </div>
+      {/* ================= Main Content ================= */}
+      <div className="drawer-content flex flex-col min-h-screen bg-gray-50">
+        {/* Top Navbar */}
+        <nav className="navbar bg-white shadow-md">
+          <div className="flex-none lg:hidden">
+            <label htmlFor="dashboard-drawer" className="btn btn-square btn-ghost">
+              ☰
+            </label>
+          </div>
 
-            {/* Sidebar */}
-            <div className="drawer-side z-20">
-                <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
-                <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content shadow-xl">
+          <div className="flex-1 px-4 text-xl font-bold">
+            LoanMate Dashboard
+          </div>
 
-                    {/* Sidebar Header */}
-                    <li className="py-4 px-3 text-2xl font-extrabold text-primary border-b border-gray-200 mb-4">
-                        LoanMate
-                    </li>
+          <div className="flex items-center gap-2">
+            <FaUserTie />
+            <span>{role === "manager" ? "Manager" : "Borrower"}</span>
+          </div>
+        </nav>
 
-                    {/* Borrower Links */}
-                    {dashboardLinks}
-
-                    <div className="divider my-2"></div>
-
-
-                    <li>
-                        <Link to="/dashboard/profile" className="flex items-center p-3 rounded-lg hover:bg-gray-100 text-gray-700">
-                            <FaCog className="w-5 h-5 mr-3" />
-                            <span className="font-medium">Settings & Profile</span>
-                        </Link>
-                    </li>
-                </ul>
-            </div>
+        {/* Page Content */}
+        <div className="p-6 flex-grow">
+          <Outlet />
         </div>
-    );
+      </div>
+
+      {/* ================= Sidebar ================= */}
+      <div className="drawer-side">
+        <label htmlFor="dashboard-drawer" className="drawer-overlay"></label>
+
+        <ul className="menu p-4 w-72 min-h-full bg-base-200">
+          <li className="text-xl font-bold mb-4">LoanMate</li>
+
+          <li>
+            <Link to="/">
+              <FaHome /> Home
+            </Link>
+          </li>
+
+          <div className="divider"></div>
+
+          {role === "borrower" && borrowerLinks}
+          {role === "manager" && managerLinks}
+
+          <div className="divider"></div>
+
+          <li>
+            <button onClick={logout} className="text-red-600">
+              <FaCog /> Logout
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
 };
 
 export default Dashboard;

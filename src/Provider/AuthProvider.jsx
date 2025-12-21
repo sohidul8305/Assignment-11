@@ -1,4 +1,3 @@
-// src/Provider/AuthProvider.jsx
 import React, { createContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
@@ -6,46 +5,21 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signOut as firebaseSignOut,
-  updateProfile
+  signOut,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebase/firebase.config";
 
 export const AuthContext = createContext(null);
-
 const googleProvider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
-
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const registerUser = (email, password) => {
-    setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
-
-  const signInUser = (email, password) => {
-    setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password);
-  };
-
-  // ✅ Google Login function name fixed
-  const signInGoogle = () => {
-    return signInWithPopup(auth, googleProvider);
-  };
-
-  const updateUserProfile = (profile) => {
-    return updateProfile(auth.currentUser, profile);
-  };
-
-  const logOut = () => {
-    setLoading(true);
-    return firebaseSignOut(auth).finally(() => setLoading(false));
-  };
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      // 🔥 NO API CALL HERE
       setUser(currentUser);
       setLoading(false);
     });
@@ -56,11 +30,14 @@ const AuthProvider = ({ children }) => {
   const authInfo = {
     user,
     loading,
-    registerUser,
-    signInUser,
-    signInGoogle,
-    logOut,
-    updateUserProfile,
+    registerUser: (email, password) =>
+      createUserWithEmailAndPassword(auth, email, password),
+    signInUser: (email, password) =>
+      signInWithEmailAndPassword(auth, email, password),
+    signInGoogle: () => signInWithPopup(auth, googleProvider),
+    logOut: () => signOut(auth),
+    updateUserProfile: (profile) =>
+      updateProfile(auth.currentUser, profile),
   };
 
   return (
