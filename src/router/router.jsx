@@ -1,3 +1,4 @@
+// src/routes/Router.jsx
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -25,10 +26,17 @@ import ManageLoans from "../page/Home/Dashboard/ManageLoans/ManageLoans";
 import PendingLoans from "../page/Home/Dashboard/Manager/PendingLoans/PendingLoans";
 import ApprovedLoans from "../page/Home/Dashboard/ApprovedLoans/ApprovedLoans";
 
+// Admin Pages
+import ManageUsers from "../page/Home/Dashboard/Admin/ManageUsers";
+import AllLoans from "../page/Home/Dashboard/Admin/AllLoans";
+import LoanApplications from "../page/Home/Dashboard/Admin/LoanApplications";
+
 // Route Guards
 import PrivateRoutes from "./PrivateRoutes";
 import BorrowerRoute from "./BorrowerRoute";
 import ManagerRoute from "./ManagerRoute";
+import AdminRoute from "./AdminRoute";
+import LoanApplicationForm from "../components/Applyloan/LoanApplications";
 
 export const router = createBrowserRouter([
   // ================= PUBLIC ROUTES =================
@@ -42,7 +50,7 @@ export const router = createBrowserRouter([
       { path: "contact", element: <Contact /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
-
+      {path: "loan-applications", element: <LoanApplicationForm></LoanApplicationForm>},
       {
         path: "loan-details/:id",
         element: (
@@ -51,7 +59,6 @@ export const router = createBrowserRouter([
           </PrivateRoutes>
         ),
       },
-
       {
         path: "available-details/:id",
         element: <Availabledetails />,
@@ -59,7 +66,7 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // ================= DASHBOARD (ONLY ONE) =================
+  // ================= DASHBOARD =================
   {
     path: "/dashboard",
     element: (
@@ -117,6 +124,32 @@ export const router = createBrowserRouter([
           <ManagerRoute>
             <ApprovedLoans />
           </ManagerRoute>
+        ),
+      },
+
+      // ===== Admin =====
+      {
+        path: "manage-users",
+        element: (
+          <AdminRoute>
+            <ManageUsers />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "all-loan",
+        element: (
+          <AdminRoute>
+            <AllLoans />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "loan-applications",
+        element: (
+          <AdminRoute>
+            <LoanApplications />
+          </AdminRoute>
         ),
       },
 
