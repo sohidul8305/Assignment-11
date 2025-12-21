@@ -19,8 +19,8 @@ const HeroBanner = () => {
       />
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center p-4 space-y-6">
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white drop-shadow-lg">
+      <div className="absolute inset-0 bg-black bg-opacity-50 mt-20 flex flex-col justify-center items-center text-center p-4 space-y-6">
+        <h1 className="text-4xl md:text-6xl mt-5 lg:text-5xl font-extrabold text-white drop-shadow-lg">
           EMPOWER YOUR FUTURE
         </h1>
         <p className="text-lg md:text-2xl text-white max-w-3xl drop-shadow-md">
