@@ -37,6 +37,7 @@ import BorrowerRoute from "./BorrowerRoute";
 import ManagerRoute from "./ManagerRoute";
 import AdminRoute from "./AdminRoute";
 import LoanApplicationForm from "../components/Applyloan/LoanApplications";
+import UpdateLoan from "../page/Home/Dashboard/ManageLoans/UpdateLoan";
 
 export const router = createBrowserRouter([
   // ================= PUBLIC ROUTES =================
@@ -92,40 +93,47 @@ export const router = createBrowserRouter([
           </BorrowerRoute>
         ),
       },
-
-      // ===== Manager =====
-      {
-        path: "add-loan",
-        element: (
-          <ManagerRoute>
-            <AddLoan />
-          </ManagerRoute>
-        ),
-      },
-      {
-        path: "manage-loans",
-        element: (
-          <ManagerRoute>
-            <ManageLoans />
-          </ManagerRoute>
-        ),
-      },
-      {
-        path: "pending-loans",
-        element: (
-          <ManagerRoute>
-            <PendingLoans />
-          </ManagerRoute>
-        ),
-      },
-      {
-        path: "approved-loans",
-        element: (
-          <ManagerRoute>
-            <ApprovedLoans />
-          </ManagerRoute>
-        ),
-      },
+// Manager Pages
+{
+  path: "add-loan",
+  element: (
+    <ManagerRoute>
+      <AddLoan />
+    </ManagerRoute>
+  ),
+},
+{
+  path: "manage-loans",
+  element: (
+    <ManagerRoute>
+      <ManageLoans />
+    </ManagerRoute>
+  ),
+},
+{
+  path: "update-loan/:id",   // <-- ঠিক এইভাবে path দিতে হবে
+  element: (
+    <ManagerRoute>
+      <UpdateLoan />
+    </ManagerRoute>
+  ),
+},
+{
+  path: "pending-loans",
+  element: (
+    <ManagerRoute>
+      <PendingLoans />
+    </ManagerRoute>
+  ),
+},
+{
+  path: "approved-loans",
+  element: (
+    <ManagerRoute>
+      <ApprovedLoans />
+    </ManagerRoute>
+  ),
+},
 
       // ===== Admin =====
       {
