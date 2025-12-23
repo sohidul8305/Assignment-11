@@ -16,13 +16,14 @@ const PaymentSuccess = () => {
 
     const fetchPayment = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/payment-details?session_id=${sessionId}`);
-        console.log("Payment fetched:", res.data);
-        setPayment(res.data); // real-time payment details set
-        setLoading(false);
+        const res = await axios.get(
+          `http://localhost:4000/payment-details?session_id=${sessionId}`
+        );
+        setPayment(res.data);
       } catch (err) {
         console.error("Payment fetch error:", err.response?.data || err.message);
         setError("Payment info not found");
+      } finally {
         setLoading(false);
       }
     };
@@ -32,18 +33,15 @@ const PaymentSuccess = () => {
 
   if (loading) return <p>⏳ Payment processing...</p>;
   if (error) return <p style={{ color: "red" }}>❌ {error}</p>;
-  if (!payment) return <p>❌ Payment info not found</p>;
 
   return (
     <div style={{ padding: "20px" }}>
       <h2 style={{ color: "green" }}>Payment Successful 🎉</h2>
-      <p><b>Transaction ID:</b> {payment.transactionId || payment.sessionId}</p>
+      <p><b>Transaction ID:</b> {payment.transactionId}</p>
       <p><b>Loan Title:</b> {payment.loanTitle}</p>
       <p><b>Email:</b> {payment.email}</p>
       <p><b>Status:</b> {payment.status}</p>
-      <p><b>Amount Paid:</b> {payment.amount} {payment.currency?.toUpperCase()}</p>
-      <p style={{ marginTop: "10px" }}>Thank you for your payment ❤️</p>
-
+      <p><b>Amount Paid:</b> {payment.amount} {payment.currency}</p>
       <button
         style={{ marginTop: "15px", padding: "8px 15px", background: "blue", color: "white", borderRadius: "5px" }}
         onClick={() => navigate("/dashboard/my-loans")}
