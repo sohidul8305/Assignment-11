@@ -2,11 +2,10 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 
-// Layouts
 import RootLayouts from "../Layout/RootLayouts";
 import Dashboard from "../page/Home/Dashboard/Dashboard";
 
-// Public Pages
+// Public
 import Home from "../page/Home/Home";
 import AboutUs from "../page/Home/Aboutus/AboutUs";
 import Contact from "../page/Home/Contact/Contact";
@@ -15,32 +14,32 @@ import Register from "../components/Register";
 import Allloans from "../page/Home/Allloans/Allloans";
 import Availabledetails from "../components/Availabledetails/Availabledetails";
 import LoanDetails from "../components/Loandetails/Loandetails";
+import LoanApplicationForm from "../components/Applyloan/LoanApplications";
 
-// Dashboard Pages
+// Dashboard
 import MyLoans from "../page/Home/Dashboard/Myloan/Myloans";
 import Profile from "../page/Home/Dashboard/profile/profile";
+import PaymentSuccess from "../page/Home/Dashboard/Paymentsuccess/PaymentSuccess";
 
-// Manager Pages
+// Manager
 import AddLoan from "../page/Home/Dashboard/Manager/AddLoan/AddLoan";
 import ManageLoans from "../page/Home/Dashboard/ManageLoans/ManageLoans";
 import PendingLoans from "../page/Home/Dashboard/Manager/PendingLoans/PendingLoans";
 import ApprovedLoans from "../page/Home/Dashboard/ApprovedLoans/ApprovedLoans";
+import UpdateLoan from "../page/Home/Dashboard/ManageLoans/UpdateLoan";
 
-// Admin Pages
+// Admin
 import ManageUsers from "../page/Home/Dashboard/Admin/ManageUsers";
 import AllLoans from "../page/Home/Dashboard/Admin/AllLoans";
 import LoanApplications from "../page/Home/Dashboard/Admin/LoanApplications";
 
-// Route Guards
+// Guards
 import PrivateRoutes from "./PrivateRoutes";
 import BorrowerRoute from "./BorrowerRoute";
 import ManagerRoute from "./ManagerRoute";
 import AdminRoute from "./AdminRoute";
-import LoanApplicationForm from "../components/Applyloan/LoanApplications";
-import UpdateLoan from "../page/Home/Dashboard/ManageLoans/UpdateLoan";
 
 export const router = createBrowserRouter([
-  // ================= PUBLIC ROUTES =================
   {
     path: "/",
     element: <RootLayouts />,
@@ -51,7 +50,7 @@ export const router = createBrowserRouter([
       { path: "contact", element: <Contact /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
-      {path: "loan-applications", element: <LoanApplicationForm></LoanApplicationForm>},
+      { path: "loan-applications", element: <LoanApplicationForm /> },
       {
         path: "loan-details/:id",
         element: (
@@ -60,14 +59,10 @@ export const router = createBrowserRouter([
           </PrivateRoutes>
         ),
       },
-      {
-        path: "available-details/:id",
-        element: <Availabledetails />,
-      },
+      { path: "available-details/:id", element: <Availabledetails /> },
     ],
   },
 
-  // ================= DASHBOARD =================
   {
     path: "/dashboard",
     element: (
@@ -76,7 +71,12 @@ export const router = createBrowserRouter([
       </PrivateRoutes>
     ),
     children: [
-      // ===== Borrower =====
+      // 🔥 Payment Success (NO role guard)
+      {
+        path: "payment-success",
+        element: <PaymentSuccess />,
+      },
+
       {
         index: true,
         element: (
@@ -93,49 +93,50 @@ export const router = createBrowserRouter([
           </BorrowerRoute>
         ),
       },
-// Manager Pages
-{
-  path: "add-loan",
-  element: (
-    <ManagerRoute>
-      <AddLoan />
-    </ManagerRoute>
-  ),
-},
-{
-  path: "manage-loans",
-  element: (
-    <ManagerRoute>
-      <ManageLoans />
-    </ManagerRoute>
-  ),
-},
-{
-  path: "update-loan/:id",   // <-- ঠিক এইভাবে path দিতে হবে
-  element: (
-    <ManagerRoute>
-      <UpdateLoan />
-    </ManagerRoute>
-  ),
-},
-{
-  path: "pending-loans",
-  element: (
-    <ManagerRoute>
-      <PendingLoans />
-    </ManagerRoute>
-  ),
-},
-{
-  path: "approved-loans",
-  element: (
-    <ManagerRoute>
-      <ApprovedLoans />
-    </ManagerRoute>
-  ),
-},
 
-      // ===== Admin =====
+      // Manager
+      {
+        path: "add-loan",
+        element: (
+          <ManagerRoute>
+            <AddLoan />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "manage-loans",
+        element: (
+          <ManagerRoute>
+            <ManageLoans />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "update-loan/:id",
+        element: (
+          <ManagerRoute>
+            <UpdateLoan />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "pending-loans",
+        element: (
+          <ManagerRoute>
+            <PendingLoans />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "approved-loans",
+        element: (
+          <ManagerRoute>
+            <ApprovedLoans />
+          </ManagerRoute>
+        ),
+      },
+
+      // Admin
       {
         path: "manage-users",
         element: (
@@ -161,11 +162,7 @@ export const router = createBrowserRouter([
         ),
       },
 
-      // ===== Common =====
-      {
-        path: "profile",
-        element: <Profile />,
-      },
+      { path: "profile", element: <Profile /> },
     ],
   },
 ]);

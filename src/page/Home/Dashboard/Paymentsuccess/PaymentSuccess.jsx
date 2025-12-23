@@ -11,26 +11,24 @@ const PaymentSuccess = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-useEffect(() => {
-  if (!sessionId) return;
+  useEffect(() => {
+    if (!sessionId) return;
 
-  axios.get(`http://localhost:4000/payment-details?session_id=${sessionId}`)
-    .then(async (res) => {
-      setPayment(res.data);
-      setLoading(false);
-
-      // ✅ feeStatus update
-      if (res.data?.loanId) {
-        await axios.post(`http://localhost:4000/mark-loan-paid/${res.data.loanId}`);
+    const fetchPayment = async () => {
+      try {
+        const res = await axios.get(`http://localhost:4000/payment-details?session_id=${sessionId}`);
+        console.log("Payment fetched:", res.data);
+        setPayment(res.data); // real-time payment details set
+        setLoading(false);
+      } catch (err) {
+        console.error("Payment fetch error:", err.response?.data || err.message);
+        setError("Payment info not found");
+        setLoading(false);
       }
-    })
-    .catch(err => {
-      console.error(err);
-      setError("Payment info not found");
-      setLoading(false);
-    });
-}, [sessionId]);
+    };
 
+    fetchPayment();
+  }, [sessionId]);
 
   if (loading) return <p>⏳ Payment processing...</p>;
   if (error) return <p style={{ color: "red" }}>❌ {error}</p>;
@@ -39,15 +37,12 @@ useEffect(() => {
   return (
     <div style={{ padding: "20px" }}>
       <h2 style={{ color: "green" }}>Payment Successful 🎉</h2>
-      <p><b>Transaction ID:</b> {payment.transactionId}</p>
-      <p><b>Tracking ID:</b> {payment.trackingId}</p>
+      <p><b>Transaction ID:</b> {payment.transactionId || payment.sessionId}</p>
       <p><b>Loan Title:</b> {payment.loanTitle}</p>
       <p><b>Email:</b> {payment.email}</p>
       <p><b>Status:</b> {payment.status}</p>
       <p><b>Amount Paid:</b> {payment.amount} {payment.currency?.toUpperCase()}</p>
-      <p style={{ marginTop: "10px" }}>
-        Thank you for your payment ❤️
-      </p>
+      <p style={{ marginTop: "10px" }}>Thank you for your payment ❤️</p>
 
       <button
         style={{ marginTop: "15px", padding: "8px 15px", background: "blue", color: "white", borderRadius: "5px" }}
