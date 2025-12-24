@@ -79,7 +79,7 @@ const HowItWorksSection = () => {
                 {/* Optional CTA at the bottom */}
                 <div className="text-center mt-16">
                     <a
-                        href="/loan-application-form"
+                        href="/loan-applications"
                         className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-10 rounded-full text-lg shadow-lg transition duration-300"
                     >
                         Start Your Application Now

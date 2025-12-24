@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 // API call
 const fetchLoans = async () => {
-  const res = await axios.get("http://localhost:4000/loans");
+  const res = await axios.get("https://loanmate-nine.vercel.app/loans");
   return res.data;
 };
 

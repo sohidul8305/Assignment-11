@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-const API = "http://localhost:4000";
+const API = "https://loanmate-nine.vercel.app";
 
 const ManageLoans = () => {
   const navigate = useNavigate();

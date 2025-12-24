@@ -4,7 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 
-const API = "http://localhost:4000";
+const API = "https://loanmate-nine.vercel.app";
 
 const AllLoans = () => {
   const { user } = useAuth();

@@ -12,7 +12,7 @@ const PaymentSuccess = () => {
 
     const confirmPayment = async () => {
       try {
-        await axios.post("http://localhost:4000/confirm-payment", { sessionId });
+        await axios.post("https://loanmate-nine.vercel.app/confirm-payment", { sessionId });
 
         // ✅ payment confirm → redirect
         navigate("/dashboard/my-loans");

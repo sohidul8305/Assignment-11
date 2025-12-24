@@ -18,7 +18,7 @@ const Profile = () => {
 
     // Backend থেকে complete user info fetch
     axios
-      .get(`http://localhost:4000/users?email=${user.email}`)
+      .get(`https://loanmate-nine.vercel.app/users?email=${user.email}`)
       .then((res) => {
         setFullUser(res.data || {});
       })

@@ -21,7 +21,7 @@ const AddLoan = () => {
     };
 
     try {
-      const res = await axios.post("http://localhost:4000/loans", newLoan);
+      const res = await axios.post("https://loanmate-nine.vercel.app/loans", newLoan);
       if (res.data.success) {
         toast.success("Loan added successfully ✅");
         form.reset();

@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const API = "http://localhost:4000";
+const API = "https://loanmate-nine.vercel.app";
 
 const UpdateLoan = () => {
   const { id } = useParams();

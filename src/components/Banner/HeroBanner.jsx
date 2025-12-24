@@ -29,14 +29,13 @@ const HeroBanner = () => {
         </p>
 
         <div className="flex flex-col md:flex-row gap-4 mt-6">
-      <Link to="loan-applications">
-            <button
-            onClick={() => navigate("/loan-application-form")}
-            className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition duration-300 transform hover:scale-105"
-          >
-            APPLY FOR LOAN
-          </button>
-      </Link>
+<Link to="/loan-applications">
+  <button
+    className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition duration-300 transform hover:scale-105"
+  >
+    APPLY FOR LOAN
+  </button>
+</Link>
 
           <button
             onClick={() => navigate("/all-loans")}
