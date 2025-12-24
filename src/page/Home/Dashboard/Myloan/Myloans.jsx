@@ -2,23 +2,20 @@ import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import useAuth from "../../../../hooks/useAuth";
-import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import axiosSecure from "../../../../hooks/useAxiosSecure";
 
 const MyLoans = () => {
-  const { user } = useAuth();
-  const axiosSecure = useAxiosSecure();
+  const { user, loading: authLoading } = useAuth(); // 🔹 auth loading check
   const queryClient = useQueryClient();
 
   // ======================
   // FETCH MY LOANS
   // ======================
-  const { data: loans = [], refetch, isLoading } = useQuery({
+  const { data: loans = [], isLoading } = useQuery({
     queryKey: ["my-loans", user?.email],
-    enabled: !!user?.email,
+    enabled: !!user?.email, // 🔹 only fetch when email exists
     queryFn: async () => {
-      const res = await axiosSecure.get(
-        `/loan-applications?email=${user.email}`
-      );
+      const res = await axiosSecure.get(`/loan-applications?email=${user.email}`);
       return res.data;
     },
   });
@@ -28,9 +25,7 @@ const MyLoans = () => {
   // ======================
   const cancelMutation = useMutation({
     mutationFn: async (loanId) =>
-      axiosSecure.patch(`/loan-applications/${loanId}`, {
-        status: "Cancelled",
-      }),
+      axiosSecure.patch(`/loan-applications/${loanId}`, { status: "Cancelled" }),
     onSuccess: () => {
       Swal.fire("Cancelled!", "Loan cancelled successfully.", "success");
       queryClient.invalidateQueries(["my-loans", user?.email]);
@@ -38,7 +33,7 @@ const MyLoans = () => {
   });
 
   // ======================
-  // START PAYMENT
+  // START PAYMENT (dummy, structure preserved)
   // ======================
   const handlePayFee = async (loan) => {
     try {
@@ -48,18 +43,15 @@ const MyLoans = () => {
         email: user.email,
       });
 
-      if (res.data?.url) {
-        window.location.href = res.data.url;
-      } else {
-        Swal.fire("Error", "Payment URL not found", "error");
-      }
+      if (res.data?.url) window.location.href = res.data.url;
+      else Swal.fire("Error", "Payment URL not found", "error");
     } catch (err) {
       Swal.fire("Error", "Could not start payment", "error");
     }
   };
 
   // ======================
-  // PAID MODAL (NO API)
+  // PAID MODAL
   // ======================
   const handleViewPayment = (loan) => {
     Swal.fire({
@@ -94,11 +86,12 @@ const MyLoans = () => {
       `,
     });
   };
-console.log("USER EMAIL:", user?.email);
 
-  if (isLoading) {
-    return <p className="p-6">Loading...</p>;
-  }
+  console.log("USER OBJECT:", user); // debug
+
+  // 🔹 Loading / not logged in handling
+  if (authLoading || isLoading) return <p className="p-6">Loading...</p>;
+  if (!user?.email) return <p className="p-6 text-red-500">User not logged in</p>;
 
   return (
     <div className="p-6">
@@ -127,24 +120,15 @@ console.log("USER EMAIL:", user?.email);
             ) : (
               loans.map((loan, index) => (
                 <tr key={loan._id} className="hover:bg-gray-50">
-                  <td className="border px-4 py-2 text-center">
-                    {index + 1}
-                  </td>
+                  <td className="border px-4 py-2 text-center">{index + 1}</td>
 
                   <td className="border px-4 py-2">
                     <p className="font-semibold">{loan.loanTitle}</p>
-                    <p className="text-xs text-gray-500">
-                      ID: {loan._id.slice(-6)}
-                    </p>
+                    <p className="text-xs text-gray-500">ID: {loan._id.slice(-6)}</p>
                   </td>
 
-                  <td className="border px-4 py-2 text-center">
-                    {loan.loanAmount}
-                  </td>
-
-                  <td className="border px-4 py-2 text-center">
-                    {loan.status}
-                  </td>
+                  <td className="border px-4 py-2 text-center">{loan.loanAmount}</td>
+                  <td className="border px-4 py-2 text-center">{loan.status}</td>
 
                   <td className="border px-4 py-2 text-center">
                     {loan.feeStatus === "paid" ? (
@@ -180,9 +164,7 @@ console.log("USER EMAIL:", user?.email);
 
                     {loan.status === "Pending" && (
                       <button
-                        onClick={() =>
-                          cancelMutation.mutate(loan._id)
-                        }
+                        onClick={() => cancelMutation.mutate(loan._id)}
                         className="bg-red-500 text-white px-3 py-1 rounded text-xs"
                       >
                         Cancel
