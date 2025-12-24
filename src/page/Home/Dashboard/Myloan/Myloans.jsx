@@ -11,14 +11,20 @@ const MyLoans = () => {
   // ======================
   // FETCH MY LOANS
   // ======================
-  const { data: loans = [], isLoading } = useQuery({
-    queryKey: ["my-loans", user?.email],
-    enabled: !!user?.email, // 🔹 only fetch when email exists
-    queryFn: async () => {
-      const res = await axiosSecure.get(`/loan-applications?email=${user.email}`);
-      return res.data;
-    },
-  });
+// Fetch user-specific loans & show status + feeStatus
+const { data: loans = [], isLoading } = useQuery({
+  queryKey: ["my-loans", user?.email],
+  enabled: !!user?.email,
+  queryFn: async () => {
+    const res = await axiosSecure.get(`/loan-applications?email=${user.email}`);
+    return res.data;
+  },
+});
+
+
+
+
+
 
   // ======================
   // CANCEL LOAN

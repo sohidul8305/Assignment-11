@@ -12,11 +12,9 @@ const PaymentSuccess = () => {
 
     const confirmPayment = async () => {
       try {
-        await axios.post("http://localhost:4000/confirm-payment", {
-          sessionId,
-        });
+        await axios.post("http://localhost:4000/confirm-payment", { sessionId });
 
-        // ✅ backend update done → now redirect
+        // ✅ payment confirm → redirect
         navigate("/dashboard/my-loans");
       } catch (err) {
         console.error("Payment confirm failed:", err);
@@ -28,9 +26,7 @@ const PaymentSuccess = () => {
 
   return (
     <div className="p-10 text-center">
-      <h2 className="text-green-600 text-2xl font-bold">
-        Payment Successful 🎉
-      </h2>
+      <h2 className="text-green-600 text-2xl font-bold">Payment Successful 🎉</h2>
       <p>Updating loan status...</p>
     </div>
   );
