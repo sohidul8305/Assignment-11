@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const axiosSecure = axios.create({
-  baseURL: "https://loanmate-nine.vercel.app", // backend URL
+  baseURL: "https://loanmate-nine.vercel.app",
   headers: { "Content-Type": "application/json" },
 });
 
