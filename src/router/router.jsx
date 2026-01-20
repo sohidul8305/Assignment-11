@@ -2,6 +2,7 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 
+// Layout
 import RootLayouts from "../Layout/RootLayouts";
 import Dashboard from "../page/Home/Dashboard/Dashboard";
 
@@ -15,8 +16,10 @@ import Allloans from "../page/Home/Allloans/Allloans";
 import Availabledetails from "../components/Availabledetails/Availabledetails";
 import LoanDetails from "../components/Loandetails/Loandetails";
 import LoanApplicationForm from "../components/Applyloan/LoanApplications";
+import Myapplication from "../page/Home/Myapplication/Myapplication";
+import Loancalculator from "../page/Home/Loancalculator/Loancalculator";
 
-// Dashboard Pages
+// Dashboard - Common
 import MyLoans from "../page/Home/Dashboard/Myloan/Myloans";
 import Profile from "../page/Home/Dashboard/profile/profile";
 import PaymentSuccess from "../page/Home/Dashboard/Paymentsuccess/PaymentSuccess";
@@ -32,6 +35,7 @@ import UpdateLoan from "../page/Home/Dashboard/ManageLoans/UpdateLoan";
 import ManageUsers from "../page/Home/Dashboard/Admin/ManageUsers";
 import AllLoans from "../page/Home/Dashboard/Admin/AllLoans";
 import LoanApplications from "../page/Home/Dashboard/Admin/LoanApplications";
+import Analytics from "../page/Home/Dashboard/Admin/Analytics/analytics";
 
 // Route Guards
 import PrivateRoutes from "./PrivateRoutes";
@@ -39,10 +43,12 @@ import BorrowerRoute from "./BorrowerRoute";
 import ManagerRoute from "./ManagerRoute";
 import AdminRoute from "./AdminRoute";
 
-// 404 Page
+// 404
 import NotFound from "../page/NotFound";
+import Reports from "../page/Home/Dashboard/Admin/Reports/Reports";
 
 export const router = createBrowserRouter([
+  /* ================= PUBLIC ROUTES ================= */
   {
     path: "/",
     element: <RootLayouts />,
@@ -51,44 +57,157 @@ export const router = createBrowserRouter([
       { path: "all-loans", element: <Allloans /> },
       { path: "about-us", element: <AboutUs /> },
       { path: "contact", element: <Contact /> },
+      { path: "applications", element: <Myapplication /> },
       { path: "login", element: <Login /> },
       { path: "register", element: <Register /> },
       { path: "loan-applications", element: <LoanApplicationForm /> },
-      { path: "loan-details/:id", element: <PrivateRoutes><LoanDetails /></PrivateRoutes> },
+      { path: "calculator", element: <Loancalculator /> },
+      {
+        path: "loan-details/:id",
+        element: (
+          <PrivateRoutes>
+            <LoanDetails />
+          </PrivateRoutes>
+        ),
+      },
       { path: "available-details/:id", element: <Availabledetails /> },
 
-      // 404 Page for public routes
+      // Public 404
       { path: "*", element: <NotFound /> },
     ],
   },
 
+  /* ================= DASHBOARD ROUTES ================= */
   {
     path: "/dashboard",
-    element: <PrivateRoutes><Dashboard /></PrivateRoutes>,
+    element: (
+      <PrivateRoutes>
+        <Dashboard />
+      </PrivateRoutes>
+    ),
     children: [
-      // Payment Success (no role guard)
+      // Common
       { path: "payment-success", element: <PaymentSuccess /> },
-
-      // Borrower routes
-      { index: true, element: <BorrowerRoute><MyLoans /></BorrowerRoute> },
-      { path: "my-loans", element: <BorrowerRoute><MyLoans /></BorrowerRoute> },
-
-      // Manager routes
-      { path: "add-loan", element: <ManagerRoute><AddLoan /></ManagerRoute> },
-      { path: "manage-loans", element: <ManagerRoute><ManageLoans /></ManagerRoute> },
-      { path: "update-loan/:id", element: <ManagerRoute><UpdateLoan /></ManagerRoute> },
-      { path: "pending-loans", element: <ManagerRoute><PendingLoans /></ManagerRoute> },
-      { path: "approved-loans", element: <ManagerRoute><ApprovedLoans /></ManagerRoute> },
-
-      // Admin routes
-      { path: "manage-users", element: <AdminRoute><ManageUsers /></AdminRoute> },
-      { path: "all-loan", element: <AdminRoute><AllLoans /></AdminRoute> },
-      { path: "loan-applications", element: <AdminRoute><LoanApplications /></AdminRoute> },
-
-      // Profile
       { path: "profile", element: <Profile /> },
 
-      // 404 Page for dashboard
+      // Borrower
+      {
+        index: true,
+        element: (
+          <BorrowerRoute>
+            <MyLoans />
+          </BorrowerRoute>
+        ),
+      },
+      {
+        path: "my-loans",
+        element: (
+          <BorrowerRoute>
+            <MyLoans />
+          </BorrowerRoute>
+        ),
+      },
+
+      // Manager
+      {
+        path: "add-loan",
+        element: (
+          <ManagerRoute>
+            <AddLoan />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "manage-loans",
+        element: (
+          <ManagerRoute>
+            <ManageLoans />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "update-loan/:id",
+        element: (
+          <ManagerRoute>
+            <UpdateLoan />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "pending-loans",
+        element: (
+          <ManagerRoute>
+            <PendingLoans />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "approved-loans",
+        element: (
+          <ManagerRoute>
+            <ApprovedLoans />
+          </ManagerRoute>
+        ),
+      },
+      {
+        path: "manager-analytics",
+        element: (
+          <ManagerRoute>
+            <Analytics />
+          </ManagerRoute>
+        ),
+      },
+{
+  path: "applications",
+  element: (
+    <BorrowerRoute>
+      <Myapplication />
+    </BorrowerRoute>
+  ),
+},
+      // Admin
+      {
+        path: "manage-users",
+        element: (
+          <AdminRoute>
+            <ManageUsers />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "all-loans",
+        element: (
+          <AdminRoute>
+            <AllLoans />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "loan-applications",
+        element: (
+          <AdminRoute>
+            <LoanApplications />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/dashboard/analytics",
+        element: (
+          <AdminRoute>
+            <Analytics />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "/dashboard/reports",
+        element: (
+          <AdminRoute>
+            <Reports />
+          </AdminRoute>
+        ),
+      },
+
+      // Dashboard 404
       { path: "*", element: <NotFound /> },
     ],
   },
