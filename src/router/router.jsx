@@ -13,6 +13,7 @@ import Contact from "../page/Home/Contact/Contact";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import Allloans from "../page/Home/Allloans/Allloans";
+import Profile from "../components/profile/profile";
 import Availabledetails from "../components/Availabledetails/Availabledetails";
 import LoanDetails from "../components/Loandetails/Loandetails";
 import LoanApplicationForm from "../components/Applyloan/LoanApplications";
@@ -21,7 +22,6 @@ import Loancalculator from "../page/Home/Loancalculator/Loancalculator";
 
 // Dashboard - Common
 import MyLoans from "../page/Home/Dashboard/Myloan/Myloans";
-import Profile from "../page/Home/Dashboard/profile/profile";
 import PaymentSuccess from "../page/Home/Dashboard/Paymentsuccess/PaymentSuccess";
 
 // Manager
@@ -46,6 +46,7 @@ import AdminRoute from "./AdminRoute";
 // 404
 import NotFound from "../page/NotFound";
 import Reports from "../page/Home/Dashboard/Admin/Reports/Reports";
+import Documents from "../components/Documents/Documents";
 
 export const router = createBrowserRouter([
   /* ================= PUBLIC ROUTES ================= */
@@ -89,6 +90,7 @@ export const router = createBrowserRouter([
       // Common
       { path: "payment-success", element: <PaymentSuccess /> },
       { path: "profile", element: <Profile /> },
+      { path: "documents", element: <Documents /> },
 
       // Borrower
       {
@@ -150,7 +152,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "manager-analytics",
+        path: "/dashboard/dashboard/analytics",
         element: (
           <ManagerRoute>
             <Analytics />

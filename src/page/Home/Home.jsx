@@ -50,7 +50,7 @@ const Home = () => {
 
       {/* Section 1: Hero Banner */}
       <section id="hero" className="scroll-mt-20">
-        <HeroBanner 
+        <HeroBanner
           onExploreLoans={() => scrollToSection('available-loans')}
           onHowItWorks={() => scrollToSection('how-it-works')}
         />
